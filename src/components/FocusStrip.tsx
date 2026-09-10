@@ -1,7 +1,7 @@
-import type { JobSignal, ProjectTask } from '../../shared/jobpulse'
+import type { ProjectTask, WorkSignal } from '../../shared/signaldesk'
 
 type FocusStripProps = {
-  topSignal?: JobSignal
+  topSignal?: WorkSignal
   nextTask?: ProjectTask
 }
 
@@ -11,7 +11,7 @@ export function FocusStrip({ topSignal, nextTask }: FocusStripProps) {
       <div>
         <p className="label">Strongest signal</p>
         <h2>{topSignal?.skill ?? 'No signals yet'}</h2>
-        <p>{topSignal?.projectAngle ?? 'Add a job requirement to begin.'}</p>
+        <p>{topSignal?.projectAngle ?? 'Add a technical signal to begin.'}</p>
       </div>
       <div>
         <p className="label">Next project step</p>

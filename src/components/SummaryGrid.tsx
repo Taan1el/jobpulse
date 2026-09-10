@@ -11,7 +11,7 @@ export function SummaryGrid({
 }: SummaryGridProps) {
   const metrics = [
     { label: 'tracked skills', value: signalCount },
-    { label: 'listing mentions', value: totalMentions },
+    { label: 'signal mentions', value: totalMentions },
     { label: 'tasks closed', value: closedTaskCount },
   ]
 

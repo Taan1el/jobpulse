@@ -1,11 +1,11 @@
 import {
   initialState,
-  type JobPulseState,
-  type JobSignal,
   type ProjectTask,
-} from '../../shared/jobpulse'
+  type SignalDeskState,
+  type WorkSignal,
+} from '../../shared/signaldesk'
 
-export const storageKey = 'jobpulse-state-v1'
+export const storageKey = 'signaldesk-state-v1'
 
 const signalCategories: ReadonlySet<string> = new Set([
   'Frontend',
@@ -19,7 +19,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
 
-function isJobSignal(value: unknown): value is JobSignal {
+function isWorkSignal(value: unknown): value is WorkSignal {
   return (
     isRecord(value) &&
     Number.isInteger(value.id) &&
@@ -46,7 +46,7 @@ function isProjectTask(value: unknown): value is ProjectTask {
 // Saved data may come from an older version of the app or be edited by hand,
 // so anything that doesn't match the current shape falls back to the seed data
 // instead of crashing the dashboard.
-export function parseSavedState(savedState: string | null): JobPulseState {
+export function parseSavedState(savedState: string | null): SignalDeskState {
   if (!savedState) {
     return initialState
   }
@@ -57,7 +57,7 @@ export function parseSavedState(savedState: string | null): JobPulseState {
     if (
       isRecord(parsed) &&
       Array.isArray(parsed.signals) &&
-      parsed.signals.every(isJobSignal) &&
+      parsed.signals.every(isWorkSignal) &&
       Array.isArray(parsed.tasks) &&
       parsed.tasks.every(isProjectTask)
     ) {
@@ -75,7 +75,7 @@ export function parseSavedState(savedState: string | null): JobPulseState {
   return initialState
 }
 
-export function loadState(): JobPulseState {
+export function loadState(): SignalDeskState {
   try {
     return parseSavedState(window.localStorage.getItem(storageKey))
   } catch {
@@ -84,7 +84,7 @@ export function loadState(): JobPulseState {
   }
 }
 
-export function saveState(state: JobPulseState) {
+export function saveState(state: SignalDeskState) {
   try {
     window.localStorage.setItem(storageKey, JSON.stringify(state))
   } catch {

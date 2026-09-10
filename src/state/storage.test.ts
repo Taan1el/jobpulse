@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { initialState } from '../../shared/jobpulse'
+import { initialState } from '../../shared/signaldesk'
 import { loadState, parseSavedState, saveState, storageKey } from './storage'
 
 const [firstSignal] = initialState.signals

@@ -1,9 +1,9 @@
-import type { JobSignal, SignalCategory, SignalSortOption } from '../../shared/jobpulse'
+import type { SignalCategory, SignalSortOption, WorkSignal } from '../../shared/signaldesk'
 
 type SignalListProps = {
   activeCategory: 'All' | SignalCategory
   categories: Array<'All' | SignalCategory>
-  signals: JobSignal[]
+  signals: WorkSignal[]
   totalCount: number
   searchQuery: string
   sortOption: SignalSortOption
@@ -30,7 +30,7 @@ export function SignalList({
       <div className="section-heading">
         <div>
           <p className="label">Requirements</p>
-          <h2 id="signals-heading">Signals from listings</h2>
+          <h2 id="signals-heading">Technical signals</h2>
         </div>
         <fieldset className="tabs">
           <legend className="visually-hidden">Filter by category</legend>

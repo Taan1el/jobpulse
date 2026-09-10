@@ -1,7 +1,7 @@
 export type SignalCategory = 'Frontend' | 'Backend' | 'Product' | 'Quality'
 export type SignalSortOption = 'mentions' | 'alphabetical'
 
-export type JobSignal = {
+export type WorkSignal = {
   id: number
   skill: string
   category: SignalCategory
@@ -17,7 +17,7 @@ export type ProjectTask = {
   status: 'Next' | 'In progress' | 'Done'
 }
 
-export type TargetListing = {
+export type ReferenceProfile = {
   id: number
   company: string
   role: string
@@ -34,31 +34,31 @@ export type IntegrationScenario = {
   sample: string
 }
 
-export type ImportedRequirement = {
+export type ImportedSignal = {
   skill: string
   category: SignalCategory
   evidence: string
   projectAngle: string
 }
 
-export type ListingBatch = {
+export type SignalBatch = {
   id: string
-  requirements: ImportedRequirement[]
+  requirements: ImportedSignal[]
 }
 
-export type JobPulseState = {
-  signals: JobSignal[]
+export type SignalDeskState = {
+  signals: WorkSignal[]
   tasks: ProjectTask[]
   importedBatchIds: string[]
 }
 
-export const initialSignals: JobSignal[] = [
+export const initialSignals: WorkSignal[] = [
   {
     id: 1,
     skill: 'React + TypeScript',
     category: 'Frontend',
     mentions: 9,
-    evidence: 'Remote EU listings repeatedly ask for typed React interfaces.',
+    evidence: 'Recent project reviews repeatedly highlight typed React interfaces.',
     projectAngle: 'Build an interactive dashboard with typed components and state.',
   },
   {
@@ -66,7 +66,7 @@ export const initialSignals: JobSignal[] = [
     skill: 'REST integration',
     category: 'Backend',
     mentions: 7,
-    evidence: 'Frontend and full-stack listings mention REST APIs and integrations.',
+    evidence: 'Integration-heavy web apps need clear REST loading and failure states.',
     projectAngle: 'Show clean loading, error, empty, and saved states around data flows.',
   },
   {
@@ -74,7 +74,7 @@ export const initialSignals: JobSignal[] = [
     skill: 'SaaS workflows',
     category: 'Product',
     mentions: 6,
-    evidence: 'Listings describe modern SaaS platforms and customer-facing tools.',
+    evidence: 'Modern SaaS tools benefit from filtering, prioritization, and summaries.',
     projectAngle: 'Model a real workflow with filtering, prioritization, and summaries.',
   },
   {
@@ -82,7 +82,7 @@ export const initialSignals: JobSignal[] = [
     skill: 'Testing and linting',
     category: 'Quality',
     mentions: 5,
-    evidence: 'Most roles still expect clean delivery habits.',
+    evidence: 'Reliable product work depends on clean checks and focused tests.',
     projectAngle: 'Keep builds green and add focused component or domain tests.',
   },
   {
@@ -90,7 +90,7 @@ export const initialSignals: JobSignal[] = [
     skill: 'Component systems',
     category: 'Frontend',
     mentions: 4,
-    evidence: 'Some frontend roles mention Storybook and reusable UI libraries.',
+    evidence: 'Reusable UI patterns reduce duplicated dashboard controls.',
     projectAngle: 'Extract reusable filters, metric cards, forms, and status controls.',
   },
 ]
@@ -128,18 +128,18 @@ export const initialTasks: ProjectTask[] = [
   },
 ]
 
-export const initialState: JobPulseState = {
+export const initialState: SignalDeskState = {
   signals: initialSignals,
   tasks: initialTasks,
   importedBatchIds: [],
 }
 
-// Sample listings for the demo. The company names are fictional.
-export const targetListings: TargetListing[] = [
+// Sample reference profiles for the demo.
+export const referenceProfiles: ReferenceProfile[] = [
   {
     id: 1,
     company: 'Northwind Labs',
-    role: 'Full-Stack JavaScript Developer',
+    role: 'Full-stack dashboard profile',
     fit: 'Best match',
     requirements: [
       'React',
@@ -150,12 +150,12 @@ export const targetListings: TargetListing[] = [
       'CI/CD habits',
     ],
     projectMove:
-      'Most requirements are already tracked. Docker and cloud basics are the main gap.',
+      'Most signals are already tracked. Docker and cloud basics are the main gap.',
   },
   {
     id: 2,
     company: 'Fabrikam',
-    role: 'Frontend Engineer',
+    role: 'Client-side workflow profile',
     fit: 'Good match',
     requirements: [
       'React',
@@ -170,7 +170,7 @@ export const targetListings: TargetListing[] = [
   {
     id: 3,
     company: 'Contoso Digital',
-    role: 'Frontend Developer, React / Next.js',
+    role: 'Reusable interface profile',
     fit: 'Stretch',
     requirements: [
       'React',
@@ -186,7 +186,7 @@ export const targetListings: TargetListing[] = [
   {
     id: 4,
     company: 'Tailspin Commerce',
-    role: 'Full-Stack Web Developer TypeScript',
+    role: 'Product analytics profile',
     fit: 'Stretch',
     requirements: [
       'TypeScript',
@@ -205,21 +205,21 @@ export const integrationScenarios: IntegrationScenario[] = [
   {
     id: 1,
     status: 'Ready',
-    title: 'Listing batch synced',
+    title: 'Signal batch synced',
     description: 'New requirements from the latest batch are merged into your signals.',
-    sample: '5 signals synced from the latest Remote/EU search.',
+    sample: '5 signals synced from the latest planning source.',
   },
   {
     id: 2,
     status: 'Loading',
-    title: 'Fetching listing batch',
-    description: 'The dashboard stays usable while the job board responds.',
-    sample: 'Checking React, TypeScript, remote, and Europe filters.',
+    title: 'Fetching signal batch',
+    description: 'The dashboard stays usable while the remote source responds.',
+    sample: 'Checking React, TypeScript, quality, and delivery filters.',
   },
   {
     id: 3,
     status: 'Empty',
-    title: 'No matching listings',
+    title: 'No matching signals',
     description:
       'Nothing matched the current filters, so the panel suggests what to change.',
     sample: 'Try broadening the location filter or lowering the seniority match.',
@@ -229,19 +229,19 @@ export const integrationScenarios: IntegrationScenario[] = [
     status: 'Error',
     title: 'Source unavailable',
     description:
-      'The job board did not respond. Data saved on this device is unchanged.',
+      'The remote source did not respond. Data saved on this device is unchanged.',
     sample: 'Remote source timed out. Last local snapshot is still available.',
   },
 ]
 
-export const sampleListingBatch: ListingBatch = {
+export const sampleSignalBatch: SignalBatch = {
   id: 'sample-batch',
   requirements: [
     {
       skill: 'Accessibility',
       category: 'Quality',
       evidence:
-        'Frontend listings increasingly mention accessible interfaces, semantic markup, and keyboard support.',
+        'Frontend reviews increasingly mention accessible interfaces, semantic markup, and keyboard support.',
       projectAngle:
         'Add accessible names, pressed states, focus styles, and tests for key interactive controls.',
     },
@@ -249,7 +249,7 @@ export const sampleListingBatch: ListingBatch = {
       skill: 'Responsive dashboards',
       category: 'Frontend',
       evidence:
-        'React dashboard roles expect layouts that stay readable across laptop and mobile breakpoints.',
+        'React dashboards need layouts that stay readable across laptop and mobile breakpoints.',
       projectAngle:
         'Capture desktop and mobile screenshots and refine cramped responsive sections.',
     },
@@ -257,7 +257,7 @@ export const sampleListingBatch: ListingBatch = {
       skill: 'CI workflows',
       category: 'Quality',
       evidence:
-        'Most roles mention Git, reliable delivery, and CI/CD habits as signs of maintainable work.',
+        'Reliable delivery depends on Git hygiene, CI checks, and maintainable work.',
       projectAngle:
         'Run lint, tests, and build through GitHub Actions on every push.',
     },

@@ -17,11 +17,11 @@ export function ImportPanel({ requirementCount, imported, onImport }: ImportPane
     <section className="import-panel" aria-labelledby="import-heading">
       <div>
         <p className="label">Sample import</p>
-        <h2 id="import-heading">Listing batch</h2>
+        <h2 id="import-heading">Signal batch</h2>
         <p>
           {imported
             ? 'The sample batch is already in your signals. Reset the demo data to import it again.'
-            : `Add ${requirementCount} requirements from a sample listing batch.`}
+            : `Add ${requirementCount} requirements from a sample signal batch.`}
         </p>
       </div>
       <button disabled={imported} onClick={onImport} type="button">

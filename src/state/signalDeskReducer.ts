@@ -1,19 +1,19 @@
 import type {
-  ImportedRequirement,
-  JobPulseState,
-  JobSignal,
-  ListingBatch,
+  ImportedSignal,
   ProjectTask,
-} from '../../shared/jobpulse'
+  SignalBatch,
+  SignalDeskState,
+  WorkSignal,
+} from '../../shared/signaldesk'
 
-export type NewSignal = Omit<JobSignal, 'id' | 'mentions'>
+export type NewSignal = Omit<WorkSignal, 'id' | 'mentions'>
 
-export type JobPulseAction =
+export type SignalDeskAction =
   | { type: 'signalAdded'; signal: NewSignal }
   | { type: 'mentionAdded'; signalId: number }
   | { type: 'taskAdvanced'; taskId: number }
-  | { type: 'batchImported'; batch: ListingBatch }
-  | { type: 'stateReset'; state: JobPulseState }
+  | { type: 'batchImported'; batch: SignalBatch }
+  | { type: 'stateReset'; state: SignalDeskState }
 
 const nextTaskStatus: Record<ProjectTask['status'], ProjectTask['status']> = {
   Next: 'In progress',
@@ -21,14 +21,14 @@ const nextTaskStatus: Record<ProjectTask['status'], ProjectTask['status']> = {
   Done: 'Next',
 }
 
-export function nextSignalId(signals: JobSignal[]) {
+export function nextSignalId(signals: WorkSignal[]) {
   return signals.reduce((highestId, signal) => Math.max(highestId, signal.id), 0) + 1
 }
 
-// Requirements whose skill is not tracked yet, compared case-insensitively.
-export function findNewRequirements(
-  signals: JobSignal[],
-  requirements: ImportedRequirement[],
+// Signals whose skill is not tracked yet, compared case-insensitively.
+export function findNewSignals(
+  signals: WorkSignal[],
+  requirements: ImportedSignal[],
 ) {
   const trackedSkills = new Set(signals.map((signal) => signal.skill.toLowerCase()))
 
@@ -39,10 +39,10 @@ export function findNewRequirements(
 
 // Skills that are already tracked get one more mention but keep the evidence
 // and project angle the user wrote. New skills are added at the top.
-function importRequirements(
-  signals: JobSignal[],
-  requirements: ImportedRequirement[],
-): JobSignal[] {
+function importSignals(
+  signals: WorkSignal[],
+  requirements: ImportedSignal[],
+): WorkSignal[] {
   const importedSkills = new Set(
     requirements.map((requirement) => requirement.skill.toLowerCase()),
   )
@@ -53,7 +53,7 @@ function importRequirements(
       ? { ...signal, mentions: signal.mentions + 1 }
       : signal,
   )
-  const newSignals = findNewRequirements(signals, requirements).map(
+  const newSignals = findNewSignals(signals, requirements).map(
     (requirement, index) => ({
       ...requirement,
       id: firstNewId + index,
@@ -64,10 +64,10 @@ function importRequirements(
   return [...newSignals, ...updatedSignals]
 }
 
-export function jobPulseReducer(
-  state: JobPulseState,
-  action: JobPulseAction,
-): JobPulseState {
+export function signalDeskReducer(
+  state: SignalDeskState,
+  action: SignalDeskAction,
+): SignalDeskState {
   switch (action.type) {
     case 'signalAdded':
       return {
@@ -104,7 +104,7 @@ export function jobPulseReducer(
       return {
         ...state,
         importedBatchIds: [...state.importedBatchIds, action.batch.id],
-        signals: importRequirements(state.signals, action.batch.requirements),
+        signals: importSignals(state.signals, action.batch.requirements),
       }
     case 'stateReset':
       return action.state

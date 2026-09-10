@@ -219,13 +219,13 @@ button:hover {
   max-width: 520px;
 }
 
-.listing-grid {
+.reference-grid {
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 }
 
-.listing-card {
+.reference-card {
   background: #ffffff;
   border: 1px solid #d9e1e7;
   border-radius: 8px;
@@ -235,11 +235,11 @@ button:hover {
   padding: 18px;
 }
 
-.listing-card h3 {
+.reference-card h3 {
   margin: 10px 0 4px;
 }
 
-.listing-card p {
+.reference-card p {
   margin-bottom: 0;
 }
 

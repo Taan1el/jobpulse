@@ -21,7 +21,7 @@ async function findViolations(container: HTMLElement) {
     )
 }
 
-describe('JobPulse accessibility', () => {
+describe('SignalDesk accessibility', () => {
   beforeEach(() => {
     window.localStorage.clear()
   })

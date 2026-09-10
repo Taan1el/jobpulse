@@ -1,4 +1,4 @@
-import type { IntegrationScenario } from '../../shared/jobpulse'
+import type { IntegrationScenario } from '../../shared/signaldesk'
 
 type IntegrationStatesProps = {
   activeScenario: IntegrationScenario
@@ -15,11 +15,11 @@ export function IntegrationStates({
     <section className="integration-section" aria-labelledby="integration-heading">
       <div className="section-heading">
         <div>
-          <p className="label">Listing source</p>
+          <p className="label">Data source</p>
           <h2 id="integration-heading">Connection states</h2>
         </div>
         <p>
-          How the dashboard presents a job-board source while it loads, when nothing
+          How the dashboard presents a remote source while it loads, when nothing
           matches, and when it fails. These are sample states; nothing is fetched.
         </p>
       </div>

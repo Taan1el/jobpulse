@@ -1,43 +1,43 @@
 import { describe, expect, it } from 'vitest'
 import {
   initialState,
-  type JobPulseState,
-  type ListingBatch,
-} from '../../shared/jobpulse'
-import { findNewRequirements, jobPulseReducer, nextSignalId } from './jobPulseReducer'
+  type SignalBatch,
+  type SignalDeskState,
+} from '../../shared/signaldesk'
+import { findNewSignals, nextSignalId, signalDeskReducer } from './signalDeskReducer'
 
-function mentionsFor(state: JobPulseState, signalId: number) {
+function mentionsFor(state: SignalDeskState, signalId: number) {
   return state.signals.find((signal) => signal.id === signalId)?.mentions
 }
 
-const batch: ListingBatch = {
+const batch: SignalBatch = {
   id: 'test-batch',
   requirements: [
     {
       skill: 'react + typescript',
       category: 'Frontend',
-      evidence: 'Seen again in a new listing.',
+      evidence: 'Seen again in a new planning source.',
       projectAngle: 'Keep the dashboard typed end to end.',
     },
     {
       skill: 'Accessibility',
       category: 'Quality',
-      evidence: 'Listings mention keyboard support.',
+      evidence: 'Usability checks mention keyboard support.',
       projectAngle: 'Test focus and labels.',
     },
   ],
 }
 
-describe('jobPulseReducer', () => {
+describe('signalDeskReducer', () => {
   it('adds a signal with the next free id and one mention', () => {
     const newSignal = {
       skill: 'GraphQL',
       category: 'Backend' as const,
-      evidence: 'Two listings ask for GraphQL APIs.',
+      evidence: 'Two project notes mention GraphQL APIs.',
       projectAngle: 'Add a typed GraphQL client to a later project.',
     }
 
-    const state = jobPulseReducer(initialState, {
+    const state = signalDeskReducer(initialState, {
       type: 'signalAdded',
       signal: newSignal,
     })
@@ -47,16 +47,16 @@ describe('jobPulseReducer', () => {
   })
 
   it('adds a mention to one signal without touching the others', () => {
-    const state = jobPulseReducer(initialState, { type: 'mentionAdded', signalId: 2 })
+    const state = signalDeskReducer(initialState, { type: 'mentionAdded', signalId: 2 })
 
     expect(mentionsFor(state, 2)).toBe(8)
     expect(mentionsFor(state, 1)).toBe(9)
   })
 
   it('cycles a task from Next to In progress to Done and back', () => {
-    const advance = (state: JobPulseState) =>
-      jobPulseReducer(state, { type: 'taskAdvanced', taskId: 5 })
-    const statusOf = (state: JobPulseState) =>
+    const advance = (state: SignalDeskState) =>
+      signalDeskReducer(state, { type: 'taskAdvanced', taskId: 5 })
+    const statusOf = (state: SignalDeskState) =>
       state.tasks.find((task) => task.id === 5)?.status
 
     const inProgress = advance(initialState)
@@ -71,7 +71,7 @@ describe('jobPulseReducer', () => {
   })
 
   it('imports new requirements and bumps skills that are already tracked', () => {
-    const state = jobPulseReducer(initialState, { type: 'batchImported', batch })
+    const state = signalDeskReducer(initialState, { type: 'batchImported', batch })
 
     expect(mentionsFor(state, 1)).toBe(10)
     expect(state.signals[0]).toMatchObject({ id: 6, skill: 'Accessibility', mentions: 1 })
@@ -79,7 +79,7 @@ describe('jobPulseReducer', () => {
   })
 
   it('keeps the evidence and project angle already tracked for a skill', () => {
-    const state = jobPulseReducer(initialState, { type: 'batchImported', batch })
+    const state = signalDeskReducer(initialState, { type: 'batchImported', batch })
     const reactSignal = state.signals.find((signal) => signal.id === 1)
 
     expect(reactSignal?.evidence).toBe(initialState.signals[0].evidence)
@@ -87,8 +87,8 @@ describe('jobPulseReducer', () => {
   })
 
   it('ignores a batch that was already imported', () => {
-    const once = jobPulseReducer(initialState, { type: 'batchImported', batch })
-    const twice = jobPulseReducer(once, { type: 'batchImported', batch })
+    const once = signalDeskReducer(initialState, { type: 'batchImported', batch })
+    const twice = signalDeskReducer(once, { type: 'batchImported', batch })
 
     expect(twice).toBe(once)
   })
@@ -96,17 +96,17 @@ describe('jobPulseReducer', () => {
   it('leaves the previous state untouched', () => {
     const snapshot = JSON.stringify(initialState)
 
-    jobPulseReducer(initialState, { type: 'mentionAdded', signalId: 1 })
-    jobPulseReducer(initialState, { type: 'taskAdvanced', taskId: 5 })
-    jobPulseReducer(initialState, { type: 'batchImported', batch })
+    signalDeskReducer(initialState, { type: 'mentionAdded', signalId: 1 })
+    signalDeskReducer(initialState, { type: 'taskAdvanced', taskId: 5 })
+    signalDeskReducer(initialState, { type: 'batchImported', batch })
 
     expect(JSON.stringify(initialState)).toBe(snapshot)
   })
 })
 
-describe('findNewRequirements', () => {
+describe('findNewSignals', () => {
   it('matches tracked skills case-insensitively', () => {
-    const newSkills = findNewRequirements(initialState.signals, batch.requirements).map(
+    const newSkills = findNewSignals(initialState.signals, batch.requirements).map(
       (requirement) => requirement.skill,
     )
 

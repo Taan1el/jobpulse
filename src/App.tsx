@@ -2,17 +2,17 @@ import { useEffect, useMemo, useReducer, useState } from 'react'
 import {
   initialState,
   integrationScenarios,
-  sampleListingBatch,
-  targetListings,
+  referenceProfiles,
+  sampleSignalBatch,
   type SignalCategory,
   type SignalSortOption,
-} from '../shared/jobpulse'
+} from '../shared/signaldesk'
 import {
   ExportPanel,
   FocusStrip,
   ImportPanel,
   IntegrationStates,
-  ListingMatrix,
+  ReferenceMatrix,
   ProjectQueue,
   ResetDataPanel,
   SignalForm,
@@ -20,10 +20,10 @@ import {
   SummaryGrid,
 } from './components'
 import {
-  findNewRequirements,
-  jobPulseReducer,
+  findNewSignals,
+  signalDeskReducer,
   type NewSignal,
-} from './state/jobPulseReducer'
+} from './state/signalDeskReducer'
 import { loadState, saveState } from './state/storage'
 import './App.css'
 
@@ -48,7 +48,7 @@ type StatusMessage = {
 }
 
 function App() {
-  const [state, dispatch] = useReducer(jobPulseReducer, undefined, loadState)
+  const [state, dispatch] = useReducer(signalDeskReducer, undefined, loadState)
   const [activeCategory, setActiveCategory] =
     useState<(typeof categories)[number]>('All')
   const [searchQuery, setSearchQuery] = useState('')
@@ -118,14 +118,14 @@ function App() {
   const closedTaskCount = state.tasks.filter((task) => task.status === 'Done').length
   const nextTask = state.tasks.find((task) => task.status !== 'Done')
   const trackedSkills = state.signals.map((signal) => signal.skill)
-  const sampleBatchImported = state.importedBatchIds.includes(sampleListingBatch.id)
+  const sampleBatchImported = state.importedBatchIds.includes(sampleSignalBatch.id)
   const activeScenario =
     integrationScenarios.find((scenario) => scenario.id === activeScenarioId) ??
     integrationScenarios[0]
 
   function addSignal(signal: NewSignal) {
     dispatch({ type: 'signalAdded', signal })
-    showToast(`Added requirement: "${signal.skill}"`)
+    showToast(`Added signal: "${signal.skill}"`)
   }
 
   function increaseMention(signalId: number) {
@@ -148,10 +148,10 @@ function App() {
       return
     }
 
-    const { requirements } = sampleListingBatch
-    const newCount = findNewRequirements(state.signals, requirements).length
+    const { requirements } = sampleSignalBatch
+    const newCount = findNewSignals(state.signals, requirements).length
 
-    dispatch({ type: 'batchImported', batch: sampleListingBatch })
+    dispatch({ type: 'batchImported', batch: sampleSignalBatch })
     showToast(
       `Imported sample batch: ${newCount} new, ${requirements.length - newCount} already tracked`,
     )
@@ -170,7 +170,7 @@ function App() {
     const link = document.createElement('a')
 
     link.href = url
-    link.download = 'jobpulse-signals.json'
+    link.download = 'signaldesk-signals.json'
     link.click()
     URL.revokeObjectURL(url)
     showToast('Exported signals snapshot as JSON')
@@ -189,12 +189,12 @@ function App() {
       <header className="workspace-header">
         <div>
           <div className="header-meta">
-            <span className="eyebrow">Job search planner</span>
-            <span className="location-badge">Remote + Estonia / EU</span>
+            <span className="eyebrow">Technical signal planner</span>
+            <span className="location-badge">Project planning</span>
           </div>
-          <h1>JobPulse</h1>
+          <h1>SignalDesk</h1>
           <p className="subtitle">
-            Track the skills job listings keep asking for and plan what to build next.
+            Track recurring technical signals and plan what to build next.
           </p>
           <div className="meta-pills">
             <span className="storage-status">Saved in this browser</span>
@@ -209,7 +209,7 @@ function App() {
 
       <main>
         <FocusStrip nextTask={nextTask} topSignal={topSignal} />
-        <ListingMatrix listings={targetListings} />
+        <ReferenceMatrix profiles={referenceProfiles} />
         <IntegrationStates
           activeScenario={activeScenario}
           onScenarioChange={setActiveScenarioId}
@@ -235,7 +235,7 @@ function App() {
             <ImportPanel
               imported={sampleBatchImported}
               onImport={importSampleBatch}
-              requirementCount={sampleListingBatch.requirements.length}
+              requirementCount={sampleSignalBatch.requirements.length}
             />
             <ExportPanel onExport={exportSignals} />
             <ResetDataPanel onReset={resetDemoData} />

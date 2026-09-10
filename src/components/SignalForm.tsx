@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import type { SignalCategory } from '../../shared/jobpulse'
-import type { NewSignal } from '../state/jobPulseReducer'
+import type { SignalCategory } from '../../shared/signaldesk'
+import type { NewSignal } from '../state/signalDeskReducer'
 
 type SignalFormProps = {
   categories: SignalCategory[]

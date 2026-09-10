@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 
-describe('JobPulse', () => {
+describe('SignalDesk', () => {
   beforeEach(() => {
     window.localStorage.clear()
   })
@@ -13,13 +13,13 @@ describe('JobPulse', () => {
     vi.restoreAllMocks()
   })
 
-  it('shows target listings and the next project step', () => {
+  it('shows reference profiles and the next project step', () => {
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'JobPulse' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'SignalDesk' })).toBeInTheDocument()
     expect(screen.getByText('Northwind Labs')).toBeInTheDocument()
     expect(
-      screen.getByText('Full-Stack JavaScript Developer'),
+      screen.getByText('Full-stack dashboard profile'),
     ).toBeInTheDocument()
     expect(screen.getAllByText('Write component tests')).toHaveLength(2)
   })
@@ -41,7 +41,7 @@ describe('JobPulse', () => {
     )
   })
 
-  it('adds a new job signal and saves it locally', async () => {
+  it('adds a new technical signal and saves it locally', async () => {
     const user = userEvent.setup()
 
     render(<App />)
@@ -50,7 +50,7 @@ describe('JobPulse', () => {
     await user.selectOptions(screen.getByLabelText('Category'), 'Quality')
     await user.type(
       screen.getByLabelText('Evidence'),
-      'Frontend roles mention accessible interfaces and semantic markup.',
+      'Frontend reviews mention accessible interfaces and semantic markup.',
     )
     await user.type(
       screen.getByLabelText('Project angle'),
@@ -59,7 +59,7 @@ describe('JobPulse', () => {
     await user.click(screen.getByRole('button', { name: 'Save signal' }))
 
     expect(screen.getByText('Accessibility')).toBeInTheDocument()
-    expect(window.localStorage.getItem('jobpulse-state-v1')).toContain(
+    expect(window.localStorage.getItem('signaldesk-state-v1')).toContain(
       'Accessibility',
     )
   })
@@ -93,7 +93,7 @@ describe('JobPulse', () => {
     render(<App />)
 
     await user.type(screen.getByLabelText('Skill'), 'rest integration')
-    await user.type(screen.getByLabelText('Evidence'), 'Seen in another listing.')
+    await user.type(screen.getByLabelText('Evidence'), 'Seen in another project note.')
     await user.type(screen.getByLabelText('Project angle'), 'Nothing new to build.')
     await user.click(screen.getByRole('button', { name: 'Save signal' }))
 
@@ -108,7 +108,7 @@ describe('JobPulse', () => {
 
     render(<App />)
 
-    expect(screen.getByText('Listing batch synced')).toBeInTheDocument()
+    expect(screen.getByText('Signal batch synced')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Error' }))
 
@@ -116,7 +116,7 @@ describe('JobPulse', () => {
     expect(screen.getByText(/Last local snapshot/)).toBeInTheDocument()
   })
 
-  it('imports a sample listing batch into local planning data', async () => {
+  it('imports a sample signal batch into local planning data', async () => {
     const user = userEvent.setup()
 
     render(<App />)
@@ -125,7 +125,7 @@ describe('JobPulse', () => {
 
     expect(screen.getByText('Accessibility')).toBeInTheDocument()
     expect(screen.getByText('Responsive dashboards')).toBeInTheDocument()
-    expect(window.localStorage.getItem('jobpulse-state-v1')).toContain(
+    expect(window.localStorage.getItem('signaldesk-state-v1')).toContain(
       'Responsive dashboards',
     )
   })
@@ -171,7 +171,7 @@ describe('JobPulse', () => {
     const user = userEvent.setup()
     const createObjectUrl = vi
       .spyOn(URL, 'createObjectURL')
-      .mockReturnValue('blob:jobpulse')
+      .mockReturnValue('blob:signaldesk')
     const revokeObjectUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(
       () => undefined,
     )
@@ -185,7 +185,7 @@ describe('JobPulse', () => {
 
     expect(createObjectUrl).toHaveBeenCalledTimes(1)
     expect(click).toHaveBeenCalledTimes(1)
-    expect(revokeObjectUrl).toHaveBeenCalledWith('blob:jobpulse')
+    expect(revokeObjectUrl).toHaveBeenCalledWith('blob:signaldesk')
   })
 
   it('filters signals using the live search input', async () => {
@@ -279,11 +279,11 @@ describe('JobPulse', () => {
   })
 
   it('handles corrupted localStorage data without crashing', () => {
-    window.localStorage.setItem('jobpulse-state-v1', '{invalid-json')
+    window.localStorage.setItem('signaldesk-state-v1', '{invalid-json')
 
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'JobPulse' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'SignalDesk' })).toBeInTheDocument()
     expect(screen.getAllByText('React + TypeScript').length).toBeGreaterThanOrEqual(1)
   })
 })
