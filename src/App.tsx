@@ -244,7 +244,7 @@ function App() {
             </div>
           </div>
 
-          <div className="signal-list">
+          <div className="signal-list" aria-label="Filtered requirement signals">
             {filteredSignals.map((signal) => (
               <article className="signal-card" key={signal.id}>
                 <div>

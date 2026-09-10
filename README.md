@@ -15,6 +15,8 @@ Full-stack and frontend listings for Remote and Europe-based roles often repeat 
 - Show summary metrics for tracked skills, listing mentions, and closed tasks.
 - Compare target job listings against the project roadmap.
 - Export the current signals and build queue as JSON.
+- Cover core dashboard behavior with automated tests.
+- Run lint, tests, and build in GitHub Actions.
 
 ## Tech Stack
 
@@ -23,6 +25,9 @@ Full-stack and frontend listings for Remote and Europe-based roles often repeat 
 - Vite
 - Oxlint
 - Browser localStorage
+- Vitest
+- React Testing Library
+- GitHub Actions
 
 ## Run Locally
 
@@ -34,6 +39,7 @@ npm run dev
 ## Quality Checks
 
 ```bash
+npm test
 npm run lint
 npm run build
 ```
@@ -42,6 +48,5 @@ npm run build
 
 - Add a small Node API for saved signals and tasks.
 - Extract reusable UI parts into a small component library.
-- Add tests around signal filtering and task status changes.
 - Add screenshots after the first UI polish pass.
 - Deploy a private preview build for review.
