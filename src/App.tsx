@@ -189,17 +189,15 @@ function App() {
       <header className="workspace-header">
         <div>
           <div className="header-meta">
-            <span className="eyebrow">Full-Stack Market Tracker</span>
+            <span className="eyebrow">Job search planner</span>
             <span className="location-badge">Remote + Estonia / EU</span>
           </div>
           <h1>JobPulse</h1>
           <p className="subtitle">
-            Turn real market requirements into prioritized project features.
+            Track the skills job listings keep asking for and plan what to build next.
           </p>
           <div className="meta-pills">
-            <span className="storage-status">Storage: Local browser</span>
-            <span className="stack-badge">Vite + React 19 + TypeScript</span>
-            <span className="mode-badge">Frontend Only</span>
+            <span className="storage-status">Saved in this browser</span>
           </div>
         </div>
         <SummaryGrid

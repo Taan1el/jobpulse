@@ -10,11 +10,11 @@ export function ListingMatrix({ listings }: ListingMatrixProps) {
       <div className="section-heading">
         <div>
           <p className="label">Job fit</p>
-          <h2 id="job-fit-heading">Target listing matrix</h2>
+          <h2 id="job-fit-heading">Target listings</h2>
         </div>
         <p>
-          Ranked by how directly JobPulse and the next projects can
-          answer full-stack requirements across Remote and Estonia/EU postings.
+          Sample listings, rated by how well the tracked skills cover their
+          requirements.
         </p>
       </div>
       <div className="listing-grid">

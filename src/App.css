@@ -105,23 +105,6 @@ h1 {
   margin: 0;
 }
 
-.stack-badge,
-.mode-badge {
-  background: #f1f5f9;
-  border: 1px solid #d9e1e7;
-  color: #334155;
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 6px;
-}
-
-.mode-badge {
-  background: #f0fdf4;
-  border-color: #bbf7d0;
-  color: #166534;
-}
-
 h2 {
   color: #17212b;
   font-size: 1.35rem;

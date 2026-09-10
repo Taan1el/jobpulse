@@ -14,9 +14,9 @@ export function FocusStrip({ topSignal, nextTask }: FocusStripProps) {
         <p>{topSignal?.projectAngle ?? 'Add a job requirement to begin.'}</p>
       </div>
       <div>
-        <p className="label">Next project move</p>
-        <h2>{nextTask?.title ?? 'Project queue clear'}</h2>
-        <p>{nextTask?.requirement ?? 'Add a fresh improvement from the market.'}</p>
+        <p className="label">Next project step</p>
+        <h2>{nextTask?.title ?? 'Build queue clear'}</h2>
+        <p>{nextTask?.requirement ?? 'Add a task to the build queue.'}</p>
       </div>
     </section>
   )

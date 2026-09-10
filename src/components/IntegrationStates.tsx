@@ -15,17 +15,17 @@ export function IntegrationStates({
     <section className="integration-section" aria-labelledby="integration-heading">
       <div className="section-heading">
         <div>
-          <p className="label">REST-style states</p>
-          <h2 id="integration-heading">Integration readiness</h2>
+          <p className="label">Listing source</p>
+          <h2 id="integration-heading">Connection states</h2>
         </div>
         <p>
-          Demonstrates client-side state resilience (loading skeletons, data view, empty
-          fallbacks, error states) without adding backend dependencies.
+          How the dashboard presents a job-board source while it loads, when nothing
+          matches, and when it fails. These are sample states; nothing is fetched.
         </p>
       </div>
       <div className="integration-grid">
         <fieldset className="scenario-tabs">
-          <legend className="visually-hidden">Choose integration state</legend>
+          <legend className="visually-hidden">Choose a connection state</legend>
           {scenarios.map((scenario) => (
             <button
               aria-pressed={scenario.id === activeScenario.id}

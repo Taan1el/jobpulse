@@ -169,7 +169,7 @@ export function SignalForm({ categories, existingSkills, onAdd }: SignalFormProp
             const projectAngle = event.target.value
             setValues((current) => ({ ...current, projectAngle }))
           }}
-          placeholder="How the project can show it"
+          placeholder="A project that would show this skill"
           required
           value={values.projectAngle}
         />

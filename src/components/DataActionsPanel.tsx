@@ -16,12 +16,12 @@ export function ImportPanel({ requirementCount, imported, onImport }: ImportPane
   return (
     <section className="import-panel" aria-labelledby="import-heading">
       <div>
-        <p className="label">Mock import</p>
+        <p className="label">Sample import</p>
         <h2 id="import-heading">Listing batch</h2>
         <p>
           {imported
             ? 'The sample batch is already in your signals. Reset the demo data to import it again.'
-            : `Load ${requirementCount} sample requirements to demonstrate REST-style data ingestion without a backend.`}
+            : `Add ${requirementCount} requirements from a sample listing batch.`}
         </p>
       </div>
       <button disabled={imported} onClick={onImport} type="button">
@@ -37,10 +37,7 @@ export function ExportPanel({ onExport }: ExportPanelProps) {
       <div>
         <p className="label">Data handoff</p>
         <h2 id="export-heading">Export snapshot</h2>
-        <p>
-          Download the current signals and build queue for a project note or
-          project-planning review.
-        </p>
+        <p>Download the current signals and build queue as JSON.</p>
       </div>
       <button onClick={onExport} type="button">
         Export JSON

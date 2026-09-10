@@ -13,15 +13,15 @@ describe('JobPulse', () => {
     vi.restoreAllMocks()
   })
 
-  it('shows target listings and the best next project move', () => {
+  it('shows target listings and the next project step', () => {
     render(<App />)
 
     expect(screen.getByRole('heading', { name: 'JobPulse' })).toBeInTheDocument()
-    expect(screen.getByText('Operations Tracker')).toBeInTheDocument()
+    expect(screen.getByText('Northwind Labs')).toBeInTheDocument()
     expect(
       screen.getByText('Full-Stack JavaScript Developer'),
     ).toBeInTheDocument()
-    expect(screen.getAllByText('Add screenshots and responsive review')).toHaveLength(2)
+    expect(screen.getAllByText('Write component tests')).toHaveLength(2)
   })
 
   it('filters requirement signals by category', async () => {
@@ -103,12 +103,12 @@ describe('JobPulse', () => {
     expect(screen.getByText('Showing 5 of 5 signals')).toBeInTheDocument()
   })
 
-  it('switches REST-style integration states', async () => {
+  it('switches between connection states', async () => {
     const user = userEvent.setup()
 
     render(<App />)
 
-    expect(screen.getByText('Imported job signals')).toBeInTheDocument()
+    expect(screen.getByText('Listing batch synced')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Error' }))
 
@@ -143,9 +143,9 @@ describe('JobPulse', () => {
     )
   })
 
-  it('moves a task through the project queue', async () => {
+  it('moves a task through the build queue', async () => {
     const user = userEvent.setup()
-    const task = 'Add screenshots and responsive review'
+    const task = 'Deploy a preview build'
 
     render(<App />)
 

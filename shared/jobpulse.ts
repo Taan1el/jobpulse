@@ -90,7 +90,7 @@ export const initialSignals: JobSignal[] = [
     skill: 'Component systems',
     category: 'Frontend',
     mentions: 4,
-    evidence: 'Frontend stretch roles mention Storybook and reusable UI libraries.',
+    evidence: 'Some frontend roles mention Storybook and reusable UI libraries.',
     projectAngle: 'Extract reusable filters, metric cards, forms, and status controls.',
   },
 ]
@@ -98,32 +98,32 @@ export const initialSignals: JobSignal[] = [
 export const initialTasks: ProjectTask[] = [
   {
     id: 1,
-    title: 'Ship the signal dashboard',
-    requirement: 'React, TypeScript, product thinking',
+    title: 'Build a typed dashboard',
+    requirement: 'React, TypeScript, state management',
     status: 'Done',
   },
   {
     id: 2,
-    title: 'Add job-fit matrix',
-    requirement: 'Product thinking, readable project mapping',
+    title: 'Add a REST client with loading and error states',
+    requirement: 'REST APIs, async UI states',
     status: 'Done',
   },
   {
     id: 3,
-    title: 'Write acceptance tests',
-    requirement: 'Quality habits, maintainability',
-    status: 'Done',
+    title: 'Write component tests',
+    requirement: 'Testing, maintainability',
+    status: 'In progress',
   },
   {
     id: 4,
-    title: 'Extract dashboard components',
-    requirement: 'Reusable UI, clean code, maintainability',
-    status: 'Done',
+    title: 'Extract a reusable component set',
+    requirement: 'Reusable UI, clean code',
+    status: 'Next',
   },
   {
     id: 5,
-    title: 'Add screenshots and responsive review',
-    requirement: 'Project polish, clear demo',
+    title: 'Deploy a preview build',
+    requirement: 'CI/CD, deployment',
     status: 'Next',
   },
 ]
@@ -134,10 +134,11 @@ export const initialState: JobPulseState = {
   importedBatchIds: [],
 }
 
+// Sample listings for the demo. The company names are fictional.
 export const targetListings: TargetListing[] = [
   {
     id: 1,
-    company: 'Operations Tracker',
+    company: 'Northwind Labs',
     role: 'Full-Stack JavaScript Developer',
     fit: 'Best match',
     requirements: [
@@ -149,11 +150,11 @@ export const targetListings: TargetListing[] = [
       'CI/CD habits',
     ],
     projectMove:
-      'Use JobPulse to show typed UI, project prioritization, persistence, tests, and deployment readiness.',
+      'Most requirements are already tracked. Docker and cloud basics are the main gap.',
   },
   {
     id: 2,
-    company: 'Frontend Console',
+    company: 'Fabrikam',
     role: 'Frontend Engineer',
     fit: 'Good match',
     requirements: [
@@ -164,12 +165,11 @@ export const targetListings: TargetListing[] = [
       'Clean code',
       'Independent delivery',
     ],
-    projectMove:
-      'Polish JobPulse interactions, responsive states, README clarity, and commit history.',
+    projectMove: 'Covered by the tracked skills. More REST practice would strengthen it.',
   },
   {
     id: 3,
-    company: 'Component Studio OU',
+    company: 'Contoso Digital',
     role: 'Frontend Developer, React / Next.js',
     fit: 'Stretch',
     requirements: [
@@ -181,11 +181,11 @@ export const targetListings: TargetListing[] = [
       'Component libraries',
     ],
     projectMove:
-      'Create a separate component-library repo after JobPulse has reusable UI patterns worth extracting.',
+      'Next.js, Tailwind, and Storybook are gaps. A component library project would cover them.',
   },
   {
     id: 4,
-    company: 'SaaS Metrics Lab',
+    company: 'Tailspin Commerce',
     role: 'Full-Stack Web Developer TypeScript',
     fit: 'Stretch',
     requirements: [
@@ -197,7 +197,7 @@ export const targetListings: TargetListing[] = [
       'Vitest',
     ],
     projectMove:
-      'Build a SaaS funnel demo later with checkout, experiments, analytics events, and tests.',
+      'PostgreSQL and payments are gaps. A small checkout project would cover them.',
   },
 ]
 
@@ -205,17 +205,15 @@ export const integrationScenarios: IntegrationScenario[] = [
   {
     id: 1,
     status: 'Ready',
-    title: 'Imported job signals',
-    description:
-      'The UI has usable data and can summarize repeated requirements from a listing batch.',
+    title: 'Listing batch synced',
+    description: 'New requirements from the latest batch are merged into your signals.',
     sample: '5 signals synced from the latest Remote/EU search.',
   },
   {
     id: 2,
     status: 'Loading',
     title: 'Fetching listing batch',
-    description:
-      'The dashboard keeps the user oriented while a remote job-board request is in flight.',
+    description: 'The dashboard stays usable while the job board responds.',
     sample: 'Checking React, TypeScript, remote, and Europe filters.',
   },
   {
@@ -223,7 +221,7 @@ export const integrationScenarios: IntegrationScenario[] = [
     status: 'Empty',
     title: 'No matching listings',
     description:
-      'The UI explains the empty state and suggests changing filters instead of showing a blank panel.',
+      'Nothing matched the current filters, so the panel suggests what to change.',
     sample: 'Try broadening the location filter or lowering the seniority match.',
   },
   {
@@ -231,7 +229,7 @@ export const integrationScenarios: IntegrationScenario[] = [
     status: 'Error',
     title: 'Source unavailable',
     description:
-      'The dashboard gives a human-readable failure state and keeps local planning data intact.',
+      'The job board did not respond. Data saved on this device is unchanged.',
     sample: 'Remote source timed out. Last local snapshot is still available.',
   },
 ]
@@ -259,7 +257,7 @@ export const sampleListingBatch: ListingBatch = {
       skill: 'CI workflows',
       category: 'Quality',
       evidence:
-        'Most roles mention Git, reliable delivery, and CI/CD habits as proof of maintainable work.',
+        'Most roles mention Git, reliable delivery, and CI/CD habits as signs of maintainable work.',
       projectAngle:
         'Run lint, tests, and build through GitHub Actions on every push.',
     },
