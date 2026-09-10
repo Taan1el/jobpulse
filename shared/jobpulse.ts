@@ -1,4 +1,5 @@
 export type SignalCategory = 'Frontend' | 'Backend' | 'Product' | 'Quality'
+export type SignalSortOption = 'mentions' | 'alphabetical'
 
 export type JobSignal = {
   id: number

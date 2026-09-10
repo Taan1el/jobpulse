@@ -9,6 +9,7 @@ import {
   type JobPulseState,
   type JobSignal,
   type SignalCategory,
+  type SignalSortOption,
 } from '../shared/jobpulse'
 import {
   ExportPanel,
@@ -17,11 +18,12 @@ import {
   IntegrationStates,
   ListingMatrix,
   ProjectQueue,
+  ResetDataPanel,
   SignalForm,
   SignalList,
   SummaryGrid,
   type NewSignalForm,
-} from './components/DashboardSections'
+} from './components'
 import './App.css'
 
 const storageKey = 'jobpulse-state-v1'
@@ -33,29 +35,35 @@ const categories: Array<'All' | SignalCategory> = [
   'Product',
   'Quality',
 ]
+
 const signalCategories = categories.filter(
   (category): category is SignalCategory => category !== 'All',
 )
 
-function loadState() {
+function loadState(): JobPulseState {
   try {
     const savedState = window.localStorage.getItem(storageKey)
-
     if (!savedState) {
       return initialState
     }
-
-    return JSON.parse(savedState) as JobPulseState
+    const parsed = JSON.parse(savedState) as JobPulseState
+    if (!parsed || !Array.isArray(parsed.signals) || !Array.isArray(parsed.tasks)) {
+      return initialState
+    }
+    return parsed
   } catch {
     return initialState
   }
 }
 
 function App() {
-  const [state, setState] = useState(loadState)
+  const [state, setState] = useState<JobPulseState>(loadState)
   const [activeCategory, setActiveCategory] =
     useState<(typeof categories)[number]>('All')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [sortOption, setSortOption] = useState<SignalSortOption>('mentions')
   const [activeScenarioId, setActiveScenarioId] = useState(1)
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
   const [form, setForm] = useState<NewSignalForm>({
     skill: '',
     category: 'Frontend',
@@ -63,13 +71,49 @@ function App() {
     projectAngle: '',
   })
 
+  function showToast(message: string) {
+    setToastMessage(message)
+    setTimeout(() => {
+      setToastMessage((current) => (current === message ? null : current))
+    }, 3500)
+  }
+
+  function saveState(nextState: JobPulseState) {
+    setState(nextState)
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify(nextState))
+    } catch {
+      // Quota exceeded or private mode fallback
+    }
+  }
+
   const filteredSignals = useMemo(() => {
-    if (activeCategory === 'All') {
-      return state.signals
+    let result = state.signals
+
+    if (activeCategory !== 'All') {
+      result = result.filter((signal) => signal.category === activeCategory)
     }
 
-    return state.signals.filter((signal) => signal.category === activeCategory)
-  }, [activeCategory, state.signals])
+    if (searchQuery.trim()) {
+      const query = searchQuery.trim().toLowerCase()
+      result = result.filter(
+        (signal) =>
+          signal.skill.toLowerCase().includes(query) ||
+          signal.category.toLowerCase().includes(query) ||
+          signal.evidence.toLowerCase().includes(query) ||
+          signal.projectAngle.toLowerCase().includes(query),
+      )
+    }
+
+    const sorted = [...result]
+    if (sortOption === 'mentions') {
+      sorted.sort((first, second) => second.mentions - first.mentions)
+    } else if (sortOption === 'alphabetical') {
+      sorted.sort((first, second) => first.skill.localeCompare(second.skill))
+    }
+
+    return sorted
+  }, [activeCategory, searchQuery, sortOption, state.signals])
 
   const topSignal = useMemo(
     () =>
@@ -86,11 +130,6 @@ function App() {
   const activeScenario =
     integrationScenarios.find((scenario) => scenario.id === activeScenarioId) ??
     integrationScenarios[0]
-
-  function saveState(nextState: typeof state) {
-    setState(nextState)
-    window.localStorage.setItem(storageKey, JSON.stringify(nextState))
-  }
 
   function addSignal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -115,9 +154,11 @@ function App() {
       evidence: '',
       projectAngle: '',
     })
+    showToast(`Added requirement: "${nextSignal.skill}"`)
   }
 
   function increaseMention(signalId: number) {
+    const targetSignal = state.signals.find((s) => s.id === signalId)
     saveState({
       ...state,
       signals: state.signals.map((signal) =>
@@ -126,6 +167,9 @@ function App() {
           : signal,
       ),
     })
+    if (targetSignal) {
+      showToast(`Incremented mentions for ${targetSignal.skill}`)
+    }
   }
 
   function advanceTask(taskId: number) {
@@ -181,6 +225,7 @@ function App() {
       }))
 
     saveState({ ...state, signals: [...newSignals, ...updatedSignals] })
+    showToast(`Imported ${requirements.length} sample requirements`)
   }
 
   function exportSignals() {
@@ -199,22 +244,47 @@ function App() {
     link.download = 'jobpulse-signals.json'
     link.click()
     URL.revokeObjectURL(url)
+    showToast('Exported signals snapshot as JSON')
+  }
+
+  function resetDemoData() {
+    saveState(initialState)
+    setSearchQuery('')
+    setActiveCategory('All')
+    setSortOption('mentions')
+    showToast('Reset all signals and queue to default demo state')
   }
 
   return (
     <main className="app-shell">
-      <section className="workspace-header">
+      {toastMessage && (
+        <aside aria-live="polite" className="toast-notification" role="status">
+          {toastMessage}
+        </aside>
+      )}
+
+      <header className="workspace-header">
         <div>
-          <p className="eyebrow">full-stack market tracker</p>
+          <div className="header-meta">
+            <span className="eyebrow">Full-Stack Market Tracker</span>
+            <span className="location-badge">Remote + Estonia / EU</span>
+          </div>
           <h1>JobPulse</h1>
-          <p className="storage-status">Storage: Local browser</p>
+          <p className="subtitle">
+            Turn real market requirements into prioritized project features.
+          </p>
+          <div className="meta-pills">
+            <span className="storage-status">Storage: Local browser</span>
+            <span className="stack-badge">Vite + React 19 + TypeScript</span>
+            <span className="mode-badge">Frontend Only</span>
+          </div>
         </div>
         <SummaryGrid
           closedTaskCount={closedTaskCount}
           signalCount={state.signals.length}
           totalMentions={totalMentions}
         />
-      </section>
+      </header>
 
       <FocusStrip nextTask={nextTask} topSignal={topSignal} />
       <ListingMatrix listings={targetListings} />
@@ -230,7 +300,11 @@ function App() {
           categories={categories}
           onCategoryChange={setActiveCategory}
           onIncreaseMention={increaseMention}
+          onSearchChange={setSearchQuery}
+          onSortChange={setSortOption}
+          searchQuery={searchQuery}
           signals={filteredSignals}
+          sortOption={sortOption}
         />
 
         <aside className="side-panel">
@@ -240,6 +314,7 @@ function App() {
             onImport={() => importRequirements(sampleListingBatch)}
           />
           <ExportPanel onExport={exportSignals} />
+          <ResetDataPanel onReset={resetDemoData} />
           <SignalForm
             categories={signalCategories}
             form={form}
