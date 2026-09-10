@@ -36,9 +36,22 @@ describe('parseSavedState', () => {
   })
 
   it('restores a valid saved state', () => {
-    const saved = { signals: [firstSignal], tasks: [firstTask] }
+    const saved = {
+      signals: [firstSignal],
+      tasks: [firstTask],
+      importedBatchIds: ['sample-batch'],
+    }
 
     expect(parseSavedState(JSON.stringify(saved))).toEqual(saved)
+  })
+
+  it('treats saves without imported batch ids as having none', () => {
+    const saved = { signals: [firstSignal], tasks: [firstTask] }
+
+    expect(parseSavedState(JSON.stringify(saved))).toEqual({
+      ...saved,
+      importedBatchIds: [],
+    })
   })
 })
 
@@ -48,7 +61,11 @@ describe('loadState and saveState', () => {
   })
 
   it('round-trips state through localStorage', () => {
-    const state = { signals: [{ ...firstSignal, mentions: 12 }], tasks: [] }
+    const state = {
+      signals: [{ ...firstSignal, mentions: 12 }],
+      tasks: [],
+      importedBatchIds: [],
+    }
 
     saveState(state)
 

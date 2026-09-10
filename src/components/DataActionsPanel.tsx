@@ -1,5 +1,6 @@
 type ImportPanelProps = {
-  importedCount: number
+  requirementCount: number
+  imported: boolean
   onImport: () => void
 }
 
@@ -11,19 +12,20 @@ type ResetPanelProps = {
   onReset: () => void
 }
 
-export function ImportPanel({ importedCount, onImport }: ImportPanelProps) {
+export function ImportPanel({ requirementCount, imported, onImport }: ImportPanelProps) {
   return (
     <section className="import-panel" aria-labelledby="import-heading">
       <div>
         <p className="label">Mock import</p>
         <h2 id="import-heading">Listing batch</h2>
         <p>
-          Load {importedCount} sample requirements to demonstrate REST-style data
-          ingestion without a backend.
+          {imported
+            ? 'The sample batch is already in your signals. Reset the demo data to import it again.'
+            : `Load ${requirementCount} sample requirements to demonstrate REST-style data ingestion without a backend.`}
         </p>
       </div>
-      <button onClick={onImport} type="button">
-        Import sample batch
+      <button disabled={imported} onClick={onImport} type="button">
+        {imported ? 'Sample batch imported' : 'Import sample batch'}
       </button>
     </section>
   )

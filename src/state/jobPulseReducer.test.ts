@@ -1,9 +1,31 @@
 import { describe, expect, it } from 'vitest'
-import { initialState, type JobPulseState } from '../../shared/jobpulse'
-import { jobPulseReducer, nextSignalId } from './jobPulseReducer'
+import {
+  initialState,
+  type JobPulseState,
+  type ListingBatch,
+} from '../../shared/jobpulse'
+import { findNewRequirements, jobPulseReducer, nextSignalId } from './jobPulseReducer'
 
 function mentionsFor(state: JobPulseState, signalId: number) {
   return state.signals.find((signal) => signal.id === signalId)?.mentions
+}
+
+const batch: ListingBatch = {
+  id: 'test-batch',
+  requirements: [
+    {
+      skill: 'react + typescript',
+      category: 'Frontend',
+      evidence: 'Seen again in a new listing.',
+      projectAngle: 'Keep the dashboard typed end to end.',
+    },
+    {
+      skill: 'Accessibility',
+      category: 'Quality',
+      evidence: 'Listings mention keyboard support.',
+      projectAngle: 'Test focus and labels.',
+    },
+  ],
 }
 
 describe('jobPulseReducer', () => {
@@ -49,26 +71,26 @@ describe('jobPulseReducer', () => {
   })
 
   it('imports new requirements and bumps skills that are already tracked', () => {
-    const state = jobPulseReducer(initialState, {
-      type: 'requirementsImported',
-      requirements: [
-        {
-          skill: 'react + typescript',
-          category: 'Frontend',
-          evidence: 'Seen again in a new listing.',
-          projectAngle: 'Keep the dashboard typed end to end.',
-        },
-        {
-          skill: 'Accessibility',
-          category: 'Quality',
-          evidence: 'Listings mention keyboard support.',
-          projectAngle: 'Test focus and labels.',
-        },
-      ],
-    })
+    const state = jobPulseReducer(initialState, { type: 'batchImported', batch })
 
     expect(mentionsFor(state, 1)).toBe(10)
     expect(state.signals[0]).toMatchObject({ id: 6, skill: 'Accessibility', mentions: 1 })
+    expect(state.importedBatchIds).toEqual(['test-batch'])
+  })
+
+  it('keeps the evidence and project angle already tracked for a skill', () => {
+    const state = jobPulseReducer(initialState, { type: 'batchImported', batch })
+    const reactSignal = state.signals.find((signal) => signal.id === 1)
+
+    expect(reactSignal?.evidence).toBe(initialState.signals[0].evidence)
+    expect(reactSignal?.projectAngle).toBe(initialState.signals[0].projectAngle)
+  })
+
+  it('ignores a batch that was already imported', () => {
+    const once = jobPulseReducer(initialState, { type: 'batchImported', batch })
+    const twice = jobPulseReducer(once, { type: 'batchImported', batch })
+
+    expect(twice).toBe(once)
   })
 
   it('leaves the previous state untouched', () => {
@@ -76,8 +98,19 @@ describe('jobPulseReducer', () => {
 
     jobPulseReducer(initialState, { type: 'mentionAdded', signalId: 1 })
     jobPulseReducer(initialState, { type: 'taskAdvanced', taskId: 5 })
+    jobPulseReducer(initialState, { type: 'batchImported', batch })
 
     expect(JSON.stringify(initialState)).toBe(snapshot)
+  })
+})
+
+describe('findNewRequirements', () => {
+  it('matches tracked skills case-insensitively', () => {
+    const newSkills = findNewRequirements(initialState.signals, batch.requirements).map(
+      (requirement) => requirement.skill,
+    )
+
+    expect(newSkills).toEqual(['Accessibility'])
   })
 })
 

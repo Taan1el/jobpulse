@@ -2,6 +2,7 @@ import type {
   ImportedRequirement,
   JobPulseState,
   JobSignal,
+  ListingBatch,
   ProjectTask,
 } from '../../shared/jobpulse'
 
@@ -11,7 +12,7 @@ export type JobPulseAction =
   | { type: 'signalAdded'; signal: NewSignal }
   | { type: 'mentionAdded'; signalId: number }
   | { type: 'taskAdvanced'; taskId: number }
-  | { type: 'requirementsImported'; requirements: ImportedRequirement[] }
+  | { type: 'batchImported'; batch: ListingBatch }
   | { type: 'stateReset'; state: JobPulseState }
 
 const nextTaskStatus: Record<ProjectTask['status'], ProjectTask['status']> = {
@@ -24,35 +25,41 @@ export function nextSignalId(signals: JobSignal[]) {
   return signals.reduce((highestId, signal) => Math.max(highestId, signal.id), 0) + 1
 }
 
+// Requirements whose skill is not tracked yet, compared case-insensitively.
+export function findNewRequirements(
+  signals: JobSignal[],
+  requirements: ImportedRequirement[],
+) {
+  const trackedSkills = new Set(signals.map((signal) => signal.skill.toLowerCase()))
+
+  return requirements.filter(
+    (requirement) => !trackedSkills.has(requirement.skill.toLowerCase()),
+  )
+}
+
+// Skills that are already tracked get one more mention but keep the evidence
+// and project angle the user wrote. New skills are added at the top.
 function importRequirements(
   signals: JobSignal[],
   requirements: ImportedRequirement[],
 ): JobSignal[] {
-  const requirementsBySkill = new Map(
-    requirements.map((requirement) => [requirement.skill.toLowerCase(), requirement]),
+  const importedSkills = new Set(
+    requirements.map((requirement) => requirement.skill.toLowerCase()),
   )
-  const trackedSkills = new Set(signals.map((signal) => signal.skill.toLowerCase()))
   const firstNewId = nextSignalId(signals)
 
-  const updatedSignals = signals.map((signal) => {
-    const requirement = requirementsBySkill.get(signal.skill.toLowerCase())
-
-    return requirement
-      ? {
-          ...signal,
-          evidence: requirement.evidence,
-          mentions: signal.mentions + 1,
-          projectAngle: requirement.projectAngle,
-        }
-      : signal
-  })
-  const newSignals = requirements
-    .filter((requirement) => !trackedSkills.has(requirement.skill.toLowerCase()))
-    .map((requirement, index) => ({
+  const updatedSignals = signals.map((signal) =>
+    importedSkills.has(signal.skill.toLowerCase())
+      ? { ...signal, mentions: signal.mentions + 1 }
+      : signal,
+  )
+  const newSignals = findNewRequirements(signals, requirements).map(
+    (requirement, index) => ({
       ...requirement,
       id: firstNewId + index,
       mentions: 1,
-    }))
+    }),
+  )
 
   return [...newSignals, ...updatedSignals]
 }
@@ -88,10 +95,16 @@ export function jobPulseReducer(
             : task,
         ),
       }
-    case 'requirementsImported':
+    case 'batchImported':
+      // Counting the same batch twice would inflate every mention it touches.
+      if (state.importedBatchIds.includes(action.batch.id)) {
+        return state
+      }
+
       return {
         ...state,
-        signals: importRequirements(state.signals, action.requirements),
+        importedBatchIds: [...state.importedBatchIds, action.batch.id],
+        signals: importRequirements(state.signals, action.batch.requirements),
       }
     case 'stateReset':
       return action.state

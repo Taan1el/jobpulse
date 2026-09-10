@@ -61,7 +61,12 @@ export function parseSavedState(savedState: string | null): JobPulseState {
       Array.isArray(parsed.tasks) &&
       parsed.tasks.every(isProjectTask)
     ) {
-      return { signals: parsed.signals, tasks: parsed.tasks }
+      // Saves from before batch tracking have no importedBatchIds.
+      const importedBatchIds = Array.isArray(parsed.importedBatchIds)
+        ? parsed.importedBatchIds.filter((id): id is string => typeof id === 'string')
+        : []
+
+      return { signals: parsed.signals, tasks: parsed.tasks, importedBatchIds }
     }
   } catch {
     // Unreadable JSON is treated the same as an unexpected shape.

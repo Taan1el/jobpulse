@@ -21,7 +21,7 @@ import {
   SummaryGrid,
   type NewSignalForm,
 } from './components'
-import { jobPulseReducer } from './state/jobPulseReducer'
+import { findNewRequirements, jobPulseReducer } from './state/jobPulseReducer'
 import { loadState, saveState } from './state/storage'
 import './App.css'
 
@@ -123,6 +123,7 @@ function App() {
   )
   const closedTaskCount = state.tasks.filter((task) => task.status === 'Done').length
   const nextTask = state.tasks.find((task) => task.status !== 'Done')
+  const sampleBatchImported = state.importedBatchIds.includes(sampleListingBatch.id)
   const activeScenario =
     integrationScenarios.find((scenario) => scenario.id === activeScenarioId) ??
     integrationScenarios[0]
@@ -162,8 +163,17 @@ function App() {
   }
 
   function importSampleBatch() {
-    dispatch({ type: 'requirementsImported', requirements: sampleListingBatch })
-    showToast(`Imported ${sampleListingBatch.length} sample requirements`)
+    if (sampleBatchImported) {
+      return
+    }
+
+    const { requirements } = sampleListingBatch
+    const newCount = findNewRequirements(state.signals, requirements).length
+
+    dispatch({ type: 'batchImported', batch: sampleListingBatch })
+    showToast(
+      `Imported sample batch: ${newCount} new, ${requirements.length - newCount} already tracked`,
+    )
   }
 
   function exportSignals() {
@@ -244,8 +254,9 @@ function App() {
           <aside className="side-panel">
             <ProjectQueue onAdvanceTask={advanceTask} tasks={state.tasks} />
             <ImportPanel
-              importedCount={sampleListingBatch.length}
+              imported={sampleBatchImported}
               onImport={importSampleBatch}
+              requirementCount={sampleListingBatch.requirements.length}
             />
             <ExportPanel onExport={exportSignals} />
             <ResetDataPanel onReset={resetDemoData} />

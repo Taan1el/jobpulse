@@ -613,6 +613,14 @@ button:hover {
   border-color: #236473;
 }
 
+.import-panel button:disabled {
+  background: #d9e1e7;
+  border-color: #d9e1e7;
+  color: #51606d;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .export-panel button {
   background: #17313b;
   border-color: #17313b;

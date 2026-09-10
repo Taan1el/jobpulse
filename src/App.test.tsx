@@ -91,6 +91,19 @@ describe('JobPulse', () => {
     )
   })
 
+  it('imports the sample batch only once', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: 'Import sample batch' }))
+
+    expect(screen.getByRole('button', { name: 'Sample batch imported' })).toBeDisabled()
+    expect(screen.getByRole('status', { name: 'Notifications' })).toHaveTextContent(
+      'Imported sample batch: 3 new, 0 already tracked',
+    )
+  })
+
   it('moves a task through the project queue', async () => {
     const user = userEvent.setup()
     const task = 'Add screenshots and responsive review'
