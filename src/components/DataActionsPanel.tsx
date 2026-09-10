@@ -53,11 +53,9 @@ export function ResetDataPanel({ onReset }: ResetPanelProps) {
   return (
     <section className="reset-panel" aria-labelledby="reset-heading">
       <div>
-        <p className="label">Reviewer helper</p>
+        <p className="label">Start over</p>
         <h2 id="reset-heading">Reset demo data</h2>
-        <p>
-          Restore initial signals and task statuses back to pristine defaults.
-        </p>
+        <p>Restore the sample signals, task statuses, and import state.</p>
       </div>
       <button className="reset-action-btn" onClick={onReset} type="button">
         Reset to defaults
