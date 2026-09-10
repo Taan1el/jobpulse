@@ -1,32 +1,45 @@
-# React + TypeScript + Vite
+# JobPulse
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+JobPulse is a small full-stack project in progress. The first version is a React and TypeScript dashboard for turning job-listing requirements into a practical project backlog.
 
-Currently, two official plugins are available:
+## Why This Project Exists
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Full-stack listings for Remote and Europe-based roles often repeat the same themes: typed React interfaces, API work, SaaS workflows, persistence, clean delivery habits, and deployment readiness. JobPulse makes those signals visible and turns them into concrete project tasks.
 
-## React Compiler
+## Current Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Track skills and requirements found in job listings.
+- Filter requirements by frontend, backend, product, and quality categories.
+- Save new requirement signals in local browser storage.
+- Maintain a small build queue that maps requirements to project work.
+- Show summary metrics for tracked skills, listing mentions, and closed tasks.
 
-## Expanding the Oxlint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- React
+- TypeScript
+- Vite
+- Oxlint
+- Browser localStorage for the first persistence layer
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Run Locally
+
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Quality Checks
+
+```bash
+npm run lint
+npm run build
+```
+
+## Next Improvements
+
+- Add a small Node API for saved signals and tasks.
+- Move storage from localStorage to a simple database.
+- Add tests around signal filtering and task status changes.
+- Add screenshots after the first UI polish pass.
+- Prepare a private GitHub repository once GitHub CLI auth is available.
