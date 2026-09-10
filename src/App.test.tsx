@@ -21,7 +21,7 @@ describe('JobPulse', () => {
     expect(
       screen.getByText('Full-Stack JavaScript Developer'),
     ).toBeInTheDocument()
-    expect(screen.getAllByText('Add job-fit matrix')).toHaveLength(2)
+    expect(screen.getAllByText('Add screenshots and responsive review')).toHaveLength(2)
   })
 
   it('filters requirement signals by category', async () => {
@@ -65,20 +65,18 @@ describe('JobPulse', () => {
 
     render(<App />)
 
-    const taskCard = screen.getByRole('button', { name: 'In progress' }).closest(
-      'article',
-    )
+    const taskCard = screen.getByRole('button', { name: 'Next' }).closest('article')
 
     expect(taskCard).not.toBeNull()
 
     await user.click(
       within(taskCard as HTMLElement).getByRole('button', {
-        name: 'In progress',
+        name: 'Next',
       }),
     )
 
     expect(
-      within(taskCard as HTMLElement).getByRole('button', { name: 'Done' }),
+      within(taskCard as HTMLElement).getByRole('button', { name: 'In progress' }),
     ).toBeInTheDocument()
   })
 

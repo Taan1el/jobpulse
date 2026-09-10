@@ -84,12 +84,24 @@ export const initialTasks: ProjectTask[] = [
     id: 2,
     title: 'Add job-fit matrix',
     requirement: 'Product thinking, readable project mapping',
-    status: 'In progress',
+    status: 'Done',
   },
   {
     id: 3,
     title: 'Write acceptance tests',
     requirement: 'Quality habits, maintainability',
+    status: 'Done',
+  },
+  {
+    id: 4,
+    title: 'Extract dashboard components',
+    requirement: 'Reusable UI, clean code, maintainability',
+    status: 'Done',
+  },
+  {
+    id: 5,
+    title: 'Add screenshots and responsive review',
+    requirement: 'Project polish, clear demo',
     status: 'Next',
   },
 ]

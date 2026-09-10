@@ -7,14 +7,17 @@ import {
   type JobSignal,
   type SignalCategory,
 } from '../shared/jobpulse'
+import {
+  ExportPanel,
+  FocusStrip,
+  ListingMatrix,
+  ProjectQueue,
+  SignalForm,
+  SignalList,
+  SummaryGrid,
+  type NewSignalForm,
+} from './components/DashboardSections'
 import './App.css'
-
-type NewSignalForm = {
-  skill: string
-  category: SignalCategory
-  evidence: string
-  projectAngle: string
-}
 
 const storageKey = 'jobpulse-state-v1'
 
@@ -25,6 +28,9 @@ const categories: Array<'All' | SignalCategory> = [
   'Product',
   'Quality',
 ]
+const signalCategories = categories.filter(
+  (category): category is SignalCategory => category !== 'All',
+)
 
 function loadState() {
   try {
@@ -69,7 +75,7 @@ function App() {
     (total, signal) => total + signal.mentions,
     0,
   )
-
+  const closedTaskCount = state.tasks.filter((task) => task.status === 'Done').length
   const nextTask = state.tasks.find((task) => task.status !== 'Done')
 
   function saveState(nextState: typeof state) {
@@ -160,202 +166,34 @@ function App() {
           <h1>JobPulse</h1>
           <p className="storage-status">Storage: Local browser</p>
         </div>
-        <div className="summary-grid" aria-label="Project signal summary">
-          <article>
-            <span>{state.signals.length}</span>
-            <p>tracked skills</p>
-          </article>
-          <article>
-            <span>{totalMentions}</span>
-            <p>listing mentions</p>
-          </article>
-          <article>
-            <span>{state.tasks.filter((task) => task.status === 'Done').length}</span>
-            <p>tasks closed</p>
-          </article>
-        </div>
+        <SummaryGrid
+          closedTaskCount={closedTaskCount}
+          signalCount={state.signals.length}
+          totalMentions={totalMentions}
+        />
       </section>
 
-      <section className="focus-strip">
-        <div>
-          <p className="label">Strongest signal</p>
-          <h2>{topSignal?.skill ?? 'No signals yet'}</h2>
-          <p>{topSignal?.projectAngle ?? 'Add a job requirement to begin.'}</p>
-        </div>
-        <div>
-          <p className="label">Next project move</p>
-          <h2>{nextTask?.title ?? 'Project queue clear'}</h2>
-          <p>{nextTask?.requirement ?? 'Add a fresh improvement from the market.'}</p>
-        </div>
-      </section>
-
-      <section className="fit-section">
-        <div className="section-heading">
-          <div>
-            <p className="label">Job fit</p>
-            <h2>Target listing matrix</h2>
-          </div>
-          <p>
-            Ranked by how directly JobPulse and the next projects can
-            answer the requirements.
-          </p>
-        </div>
-        <div className="listing-grid">
-          {targetListings.map((listing) => (
-            <article className="listing-card" key={listing.id}>
-              <div className="listing-title">
-                <div>
-                  <span className={`fit-pill ${listing.fit.toLowerCase().replace(' ', '-')}`}>
-                    {listing.fit}
-                  </span>
-                  <h3>{listing.company}</h3>
-                  <p>{listing.role}</p>
-                </div>
-              </div>
-              <div className="requirement-tags">
-                {listing.requirements.map((requirement) => (
-                  <span key={requirement}>{requirement}</span>
-                ))}
-              </div>
-              <p className="project-angle">{listing.projectMove}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+      <FocusStrip nextTask={nextTask} topSignal={topSignal} />
+      <ListingMatrix listings={targetListings} />
 
       <section className="content-grid">
-        <div className="signal-panel">
-          <div className="section-heading">
-            <div>
-              <p className="label">Requirements</p>
-              <h2>Signals from listings</h2>
-            </div>
-            <div className="tabs" aria-label="Filter requirement signals">
-              {categories.map((category) => (
-                <button
-                  className={category === activeCategory ? 'active' : ''}
-                  key={category}
-                  onClick={() => setActiveCategory(category)}
-                  type="button"
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="signal-list" aria-label="Filtered requirement signals">
-            {filteredSignals.map((signal) => (
-              <article className="signal-card" key={signal.id}>
-                <div>
-                  <span className="category">{signal.category}</span>
-                  <h3>{signal.skill}</h3>
-                </div>
-                <p>{signal.evidence}</p>
-                <p className="project-angle">{signal.projectAngle}</p>
-                <div className="card-actions">
-                  <span>{signal.mentions} mentions</span>
-                  <button onClick={() => increaseMention(signal.id)} type="button">
-                    Add mention
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
+        <SignalList
+          activeCategory={activeCategory}
+          categories={categories}
+          onCategoryChange={setActiveCategory}
+          onIncreaseMention={increaseMention}
+          signals={filteredSignals}
+        />
 
         <aside className="side-panel">
-          <section>
-            <div className="section-heading compact">
-              <div>
-                <p className="label">Project queue</p>
-                <h2>Build order</h2>
-              </div>
-            </div>
-            <div className="task-list">
-              {state.tasks.map((task) => (
-                <article className="task-card" key={task.id}>
-                  <div>
-                    <h3>{task.title}</h3>
-                    <p>{task.requirement}</p>
-                  </div>
-                  <button onClick={() => advanceTask(task.id)} type="button">
-                    {task.status}
-                  </button>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section className="export-panel">
-            <div>
-              <p className="label">Data handoff</p>
-              <h2>Export snapshot</h2>
-              <p>
-                Download the current signals and build queue for a project note
-                or project-planning review.
-              </p>
-            </div>
-            <button onClick={exportSignals} type="button">
-              Export JSON
-            </button>
-          </section>
-
-          <form className="signal-form" onSubmit={addSignal}>
-            <div>
-              <p className="label">Add signal</p>
-              <h2>New requirement</h2>
-            </div>
-            <label>
-              Skill
-              <input
-                onChange={(event) =>
-                  setForm({ ...form, skill: event.target.value })
-                }
-                placeholder="GraphQL, Prisma, CI..."
-                value={form.skill}
-              />
-            </label>
-            <label>
-              Category
-              <select
-                onChange={(event) =>
-                  setForm({
-                    ...form,
-                    category: event.target.value as SignalCategory,
-                  })
-                }
-                value={form.category}
-              >
-                {categories.slice(1).map((category) => (
-                  <option key={category}>{category}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Evidence
-              <textarea
-                onChange={(event) =>
-                  setForm({ ...form, evidence: event.target.value })
-                }
-                placeholder="Where it appeared and why it matters"
-                value={form.evidence}
-              />
-            </label>
-            <label>
-              Project angle
-              <textarea
-                onChange={(event) =>
-                  setForm({ ...form, projectAngle: event.target.value })
-                }
-                placeholder="How the project can show it"
-                value={form.projectAngle}
-              />
-            </label>
-            <button className="primary-action" type="submit">
-              Save signal
-            </button>
-          </form>
+          <ProjectQueue onAdvanceTask={advanceTask} tasks={state.tasks} />
+          <ExportPanel onExport={exportSignals} />
+          <SignalForm
+            categories={signalCategories}
+            form={form}
+            onFormChange={setForm}
+            onSubmit={addSignal}
+          />
         </aside>
       </section>
     </main>

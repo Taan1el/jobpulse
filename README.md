@@ -15,6 +15,7 @@ Full-stack and frontend listings for Remote and Europe-based roles often repeat 
 - Show summary metrics for tracked skills, listing mentions, and closed tasks.
 - Compare target job listings against the project roadmap.
 - Export the current signals and build queue as JSON.
+- Organize the dashboard into reusable React sections.
 - Cover core dashboard behavior with automated tests.
 - Run lint, tests, and build in GitHub Actions.
 
@@ -46,7 +47,7 @@ npm run build
 
 ## Next Improvements
 
-- Add a small Node API for saved signals and tasks.
-- Extract reusable UI parts into a small component library.
-- Add screenshots after the first UI polish pass.
+- Add screenshots after the first responsive polish pass.
+- Improve keyboard and screen-reader details across interactive controls.
+- Extract the strongest reusable UI parts into a separate component-library repo.
 - Deploy a private preview build for review.
