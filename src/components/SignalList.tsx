@@ -24,13 +24,14 @@ export function SignalList({
   onIncreaseMention,
 }: SignalListProps) {
   return (
-    <div className="signal-panel">
+    <section className="signal-panel" aria-labelledby="signals-heading">
       <div className="section-heading">
         <div>
           <p className="label">Requirements</p>
-          <h2>Signals from listings</h2>
+          <h2 id="signals-heading">Signals from listings</h2>
         </div>
-        <div className="tabs" aria-label="Filter requirement signals">
+        <fieldset className="tabs">
+          <legend className="visually-hidden">Filter by category</legend>
           {categories.map((category) => (
             <button
               aria-pressed={category === activeCategory}
@@ -42,10 +43,10 @@ export function SignalList({
               {category}
             </button>
           ))}
-        </div>
+        </fieldset>
       </div>
 
-      <div className="signal-controls" aria-label="Search and sort signals">
+      <div className="signal-controls">
         <div className="search-field">
           <label htmlFor="signal-search">Search skills & requirements</label>
           <input
@@ -79,31 +80,33 @@ export function SignalList({
           </p>
         </div>
       ) : (
-        <div className="signal-list" aria-label="Filtered requirement signals">
+        <ul className="signal-list" aria-label="Filtered requirement signals">
           {signals.map((signal) => (
-            <article className="signal-card" key={signal.id}>
-              <div>
-                <span className="category">{signal.category}</span>
-                <h3>{signal.skill}</h3>
-              </div>
-              <p>{signal.evidence}</p>
-              <p className="project-angle">{signal.projectAngle}</p>
-              <div className="card-actions">
-                <span>
-                  {signal.mentions} {signal.mentions === 1 ? 'mention' : 'mentions'}
-                </span>
-                <button
-                  aria-label={`Add mention for ${signal.skill}`}
-                  onClick={() => onIncreaseMention(signal.id)}
-                  type="button"
-                >
-                  Add mention
-                </button>
-              </div>
-            </article>
+            <li key={signal.id}>
+              <article className="signal-card">
+                <div>
+                  <span className="category">{signal.category}</span>
+                  <h3>{signal.skill}</h3>
+                </div>
+                <p>{signal.evidence}</p>
+                <p className="project-angle">{signal.projectAngle}</p>
+                <div className="card-actions">
+                  <span>
+                    {signal.mentions} {signal.mentions === 1 ? 'mention' : 'mentions'}
+                  </span>
+                  <button
+                    aria-label={`Add mention for ${signal.skill}`}
+                    onClick={() => onIncreaseMention(signal.id)}
+                    type="button"
+                  >
+                    Add mention
+                  </button>
+                </div>
+              </article>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
-    </div>
+    </section>
   )
 }

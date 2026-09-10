@@ -159,21 +159,14 @@ button:hover {
   transform: translateY(-1px);
 }
 
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid #2b7886;
-  outline-offset: 2px;
-}
-
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+  margin: 0;
 }
 
-.summary-grid article,
+.summary-grid > div,
 .focus-strip,
 .signal-card,
 .task-card,
@@ -187,22 +180,24 @@ textarea:focus-visible {
   box-shadow: 0 12px 30px rgba(27, 43, 52, 0.07);
 }
 
-.summary-grid article {
+.summary-grid > div {
+  align-content: start;
+  display: grid;
   min-height: 92px;
   padding: 18px;
 }
 
-.summary-grid span {
+.summary-grid dd {
   color: #1d6f7b;
-  display: block;
   font-size: 2rem;
   font-weight: 800;
   line-height: 1;
-  margin-bottom: 10px;
+  margin: 0 0 10px;
+  order: -1;
 }
 
-.summary-grid p {
-  margin-bottom: 0;
+.summary-grid dt {
+  color: #51606d;
 }
 
 .focus-strip {
@@ -290,7 +285,7 @@ textarea:focus-visible {
   gap: 6px;
 }
 
-.requirement-tags span {
+.requirement-tags li {
   background: #f3f6f5;
   border: 1px solid #d9e1e7;
   border-radius: 999px;

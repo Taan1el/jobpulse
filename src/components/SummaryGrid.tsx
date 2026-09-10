@@ -9,20 +9,20 @@ export function SummaryGrid({
   totalMentions,
   closedTaskCount,
 }: SummaryGridProps) {
+  const metrics = [
+    { label: 'tracked skills', value: signalCount },
+    { label: 'listing mentions', value: totalMentions },
+    { label: 'tasks closed', value: closedTaskCount },
+  ]
+
   return (
-    <div className="summary-grid" aria-label="Project signal summary">
-      <article>
-        <span>{signalCount}</span>
-        <p>tracked skills</p>
-      </article>
-      <article>
-        <span>{totalMentions}</span>
-        <p>listing mentions</p>
-      </article>
-      <article>
-        <span>{closedTaskCount}</span>
-        <p>tasks closed</p>
-      </article>
-    </div>
+    <dl className="summary-grid">
+      {metrics.map((metric) => (
+        <div key={metric.label}>
+          <dt>{metric.label}</dt>
+          <dd>{metric.value}</dd>
+        </div>
+      ))}
+    </dl>
   )
 }

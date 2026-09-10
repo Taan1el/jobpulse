@@ -193,9 +193,7 @@ describe('JobPulse', () => {
     expect(screen.getByText('10 mentions')).toBeInTheDocument()
 
     // Click reset
-    await user.click(
-      screen.getByRole('button', { name: 'Reset project data to defaults' }),
-    )
+    await user.click(screen.getByRole('button', { name: 'Reset to defaults' }))
 
     // Baseline mentions for React + TypeScript is 9
     expect(screen.getByText('9 mentions')).toBeInTheDocument()

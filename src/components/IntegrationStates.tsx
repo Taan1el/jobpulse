@@ -24,7 +24,8 @@ export function IntegrationStates({
         </p>
       </div>
       <div className="integration-grid">
-        <div className="scenario-tabs" aria-label="Choose integration state">
+        <fieldset className="scenario-tabs">
+          <legend className="visually-hidden">Choose integration state</legend>
           {scenarios.map((scenario) => (
             <button
               aria-pressed={scenario.id === activeScenario.id}
@@ -36,7 +37,7 @@ export function IntegrationStates({
               {scenario.status}
             </button>
           ))}
-        </div>
+        </fieldset>
         <article className={`scenario-card ${activeScenario.status.toLowerCase()}`}>
           <span>{activeScenario.status}</span>
           <h3>{activeScenario.title}</h3>

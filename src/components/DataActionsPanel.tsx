@@ -57,12 +57,7 @@ export function ResetDataPanel({ onReset }: ResetPanelProps) {
           Restore initial signals and task statuses back to pristine defaults.
         </p>
       </div>
-      <button
-        aria-label="Reset project data to defaults"
-        className="reset-action-btn"
-        onClick={onReset}
-        type="button"
-      >
+      <button className="reset-action-btn" onClick={onReset} type="button">
         Reset to defaults
       </button>
     </section>

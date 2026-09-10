@@ -35,11 +35,14 @@ export function ListingMatrix({ listings }: ListingMatrixProps) {
                 <p>{listing.role}</p>
               </div>
             </div>
-            <div className="requirement-tags" aria-label="Key requirements">
+            <ul
+              aria-label={`${listing.company} requirements`}
+              className="requirement-tags"
+            >
               {listing.requirements.map((requirement) => (
-                <span key={requirement}>{requirement}</span>
+                <li key={requirement}>{requirement}</li>
               ))}
-            </div>
+            </ul>
             <p className="project-angle">{listing.projectMove}</p>
           </article>
         ))}

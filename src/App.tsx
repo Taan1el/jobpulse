@@ -256,7 +256,7 @@ function App() {
   }
 
   return (
-    <main className="app-shell">
+    <div className="app-shell">
       {toastMessage && (
         <aside aria-live="polite" className="toast-notification" role="status">
           {toastMessage}
@@ -286,44 +286,46 @@ function App() {
         />
       </header>
 
-      <FocusStrip nextTask={nextTask} topSignal={topSignal} />
-      <ListingMatrix listings={targetListings} />
-      <IntegrationStates
-        activeScenario={activeScenario}
-        onScenarioChange={setActiveScenarioId}
-        scenarios={integrationScenarios}
-      />
-
-      <section className="content-grid">
-        <SignalList
-          activeCategory={activeCategory}
-          categories={categories}
-          onCategoryChange={setActiveCategory}
-          onIncreaseMention={increaseMention}
-          onSearchChange={setSearchQuery}
-          onSortChange={setSortOption}
-          searchQuery={searchQuery}
-          signals={filteredSignals}
-          sortOption={sortOption}
+      <main>
+        <FocusStrip nextTask={nextTask} topSignal={topSignal} />
+        <ListingMatrix listings={targetListings} />
+        <IntegrationStates
+          activeScenario={activeScenario}
+          onScenarioChange={setActiveScenarioId}
+          scenarios={integrationScenarios}
         />
 
-        <aside className="side-panel">
-          <ProjectQueue onAdvanceTask={advanceTask} tasks={state.tasks} />
-          <ImportPanel
-            importedCount={sampleListingBatch.length}
-            onImport={() => importRequirements(sampleListingBatch)}
+        <div className="content-grid">
+          <SignalList
+            activeCategory={activeCategory}
+            categories={categories}
+            onCategoryChange={setActiveCategory}
+            onIncreaseMention={increaseMention}
+            onSearchChange={setSearchQuery}
+            onSortChange={setSortOption}
+            searchQuery={searchQuery}
+            signals={filteredSignals}
+            sortOption={sortOption}
           />
-          <ExportPanel onExport={exportSignals} />
-          <ResetDataPanel onReset={resetDemoData} />
-          <SignalForm
-            categories={signalCategories}
-            form={form}
-            onFormChange={setForm}
-            onSubmit={addSignal}
-          />
-        </aside>
-      </section>
-    </main>
+
+          <aside className="side-panel">
+            <ProjectQueue onAdvanceTask={advanceTask} tasks={state.tasks} />
+            <ImportPanel
+              importedCount={sampleListingBatch.length}
+              onImport={() => importRequirements(sampleListingBatch)}
+            />
+            <ExportPanel onExport={exportSignals} />
+            <ResetDataPanel onReset={resetDemoData} />
+            <SignalForm
+              categories={signalCategories}
+              form={form}
+              onFormChange={setForm}
+              onSubmit={addSignal}
+            />
+          </aside>
+        </div>
+      </main>
+    </div>
   )
 }
 
