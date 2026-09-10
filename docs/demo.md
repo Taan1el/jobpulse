@@ -1,18 +1,18 @@
 # JobPulse walkthrough
 
-A short tour of the app and what each part is meant to show.
+A short tour of the app.
 
 ## 1. Header and focus strip
 
 The summary counts tracked skills, total listing mentions, and closed tasks. Below it, the focus strip shows the skill with the most mentions and the next unfinished task.
 
-## 2. Target listing matrix
+## 2. Target listings
 
-Four reference listings with their requirements. The fit label (Best match, Good match, Stretch) and the note on each card say how JobPulse or a later project answers them.
+Four sample listings with their requirements; the company names are fictional. The fit label (Best match, Good match, Stretch) and the note on each card show how well the tracked skills cover the role.
 
-## 3. Integration states
+## 3. Connection states
 
-Pick Ready, Loading, Empty, or Error to see how the dashboard would present a remote listing source in each state. The Loading view shows a skeleton. These are static demo states; nothing is fetched.
+Pick Ready, Loading, Empty, or Error to see how the dashboard presents a job-board source in each state. The Loading view shows a skeleton. These are sample states; nothing is fetched.
 
 ## 4. Requirement signals
 
@@ -27,7 +27,7 @@ Each task shows its status and a button for the next step: Start, Complete, or R
 
 - **Import sample batch** merges three sample requirements once. Importing again is blocked until the demo data is reset.
 - **Export JSON** downloads the current signals and tasks.
-- **Reset to defaults** restores the seed data.
+- **Reset to defaults** restores the sample data.
 
 ## 7. Add a signal
 
