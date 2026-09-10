@@ -1,13 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useReducer, useState } from 'react'
 import type { FormEvent } from 'react'
 import {
   initialState,
   integrationScenarios,
   sampleListingBatch,
   targetListings,
-  type ImportedRequirement,
-  type JobPulseState,
-  type JobSignal,
   type SignalCategory,
   type SignalSortOption,
 } from '../shared/jobpulse'
@@ -24,7 +21,8 @@ import {
   SummaryGrid,
   type NewSignalForm,
 } from './components'
-import { loadState, saveState as persistState } from './state/storage'
+import { jobPulseReducer } from './state/jobPulseReducer'
+import { loadState, saveState } from './state/storage'
 import './App.css'
 
 const statusMessageDuration = 3500
@@ -41,6 +39,13 @@ const signalCategories = categories.filter(
   (category): category is SignalCategory => category !== 'All',
 )
 
+const emptyForm: NewSignalForm = {
+  skill: '',
+  category: 'Frontend',
+  evidence: '',
+  projectAngle: '',
+}
+
 // A fresh id per message restarts the dismiss timer even when the text repeats.
 type StatusMessage = {
   id: number
@@ -48,19 +53,18 @@ type StatusMessage = {
 }
 
 function App() {
-  const [state, setState] = useState<JobPulseState>(loadState)
+  const [state, dispatch] = useReducer(jobPulseReducer, undefined, loadState)
   const [activeCategory, setActiveCategory] =
     useState<(typeof categories)[number]>('All')
   const [searchQuery, setSearchQuery] = useState('')
   const [sortOption, setSortOption] = useState<SignalSortOption>('mentions')
   const [activeScenarioId, setActiveScenarioId] = useState(1)
   const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null)
-  const [form, setForm] = useState<NewSignalForm>({
-    skill: '',
-    category: 'Frontend',
-    evidence: '',
-    projectAngle: '',
-  })
+  const [form, setForm] = useState<NewSignalForm>(emptyForm)
+
+  useEffect(() => {
+    saveState(state)
+  }, [state])
 
   useEffect(() => {
     if (!statusMessage) {
@@ -77,11 +81,6 @@ function App() {
 
   function showToast(text: string) {
     setStatusMessage({ id: Date.now(), text })
-  }
-
-  function saveState(nextState: JobPulseState) {
-    setState(nextState)
-    persistState(nextState)
   }
 
   const filteredSignals = useMemo(() => {
@@ -131,98 +130,40 @@ function App() {
   function addSignal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    if (!form.skill.trim() || !form.evidence.trim() || !form.projectAngle.trim()) {
+    const skill = form.skill.trim()
+    const evidence = form.evidence.trim()
+    const projectAngle = form.projectAngle.trim()
+
+    if (!skill || !evidence || !projectAngle) {
       return
     }
 
-    const nextSignal: JobSignal = {
-      id: Date.now(),
-      skill: form.skill.trim(),
-      category: form.category,
-      mentions: 1,
-      evidence: form.evidence.trim(),
-      projectAngle: form.projectAngle.trim(),
-    }
-
-    saveState({ ...state, signals: [nextSignal, ...state.signals] })
-    setForm({
-      skill: '',
-      category: 'Frontend',
-      evidence: '',
-      projectAngle: '',
+    dispatch({
+      type: 'signalAdded',
+      signal: { skill, category: form.category, evidence, projectAngle },
     })
-    showToast(`Added requirement: "${nextSignal.skill}"`)
+    setForm(emptyForm)
+    showToast(`Added requirement: "${skill}"`)
   }
 
   function increaseMention(signalId: number) {
-    const targetSignal = state.signals.find((s) => s.id === signalId)
-    saveState({
-      ...state,
-      signals: state.signals.map((signal) =>
-        signal.id === signalId
-          ? { ...signal, mentions: signal.mentions + 1 }
-          : signal,
-      ),
-    })
-    if (targetSignal) {
-      showToast(`Incremented mentions for ${targetSignal.skill}`)
+    const signal = state.signals.find((item) => item.id === signalId)
+
+    if (!signal) {
+      return
     }
+
+    dispatch({ type: 'mentionAdded', signalId })
+    showToast(`Incremented mentions for ${signal.skill}`)
   }
 
   function advanceTask(taskId: number) {
-    saveState({
-      ...state,
-      tasks: state.tasks.map((task) => {
-        if (task.id !== taskId) {
-          return task
-        }
-
-        if (task.status === 'Next') {
-          return { ...task, status: 'In progress' }
-        }
-
-        if (task.status === 'In progress') {
-          return { ...task, status: 'Done' }
-        }
-
-        return { ...task, status: 'Next' }
-      }),
-    })
+    dispatch({ type: 'taskAdvanced', taskId })
   }
 
-  function importRequirements(requirements: ImportedRequirement[]) {
-    const existingSkills = new Map(
-      state.signals.map((signal) => [signal.skill.toLowerCase(), signal]),
-    )
-    const updatedSignals = state.signals.map((signal) => {
-      const importedRequirement = requirements.find(
-        (requirement) =>
-          requirement.skill.toLowerCase() === signal.skill.toLowerCase(),
-      )
-
-      if (!importedRequirement) {
-        return signal
-      }
-
-      return {
-        ...signal,
-        evidence: importedRequirement.evidence,
-        mentions: signal.mentions + 1,
-        projectAngle: importedRequirement.projectAngle,
-      }
-    })
-    const newSignals = requirements
-      .filter(
-        (requirement) => !existingSkills.has(requirement.skill.toLowerCase()),
-      )
-      .map((requirement, index) => ({
-        id: Date.now() + index,
-        mentions: 1,
-        ...requirement,
-      }))
-
-    saveState({ ...state, signals: [...newSignals, ...updatedSignals] })
-    showToast(`Imported ${requirements.length} sample requirements`)
+  function importSampleBatch() {
+    dispatch({ type: 'requirementsImported', requirements: sampleListingBatch })
+    showToast(`Imported ${sampleListingBatch.length} sample requirements`)
   }
 
   function exportSignals() {
@@ -245,7 +186,7 @@ function App() {
   }
 
   function resetDemoData() {
-    saveState(initialState)
+    dispatch({ type: 'stateReset', state: initialState })
     setSearchQuery('')
     setActiveCategory('All')
     setSortOption('mentions')
@@ -304,7 +245,7 @@ function App() {
             <ProjectQueue onAdvanceTask={advanceTask} tasks={state.tasks} />
             <ImportPanel
               importedCount={sampleListingBatch.length}
-              onImport={() => importRequirements(sampleListingBatch)}
+              onImport={importSampleBatch}
             />
             <ExportPanel onExport={exportSignals} />
             <ResetDataPanel onReset={resetDemoData} />
