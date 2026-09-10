@@ -1,59 +1,46 @@
-# JobPulse Evaluator & Demo Guide
+# JobPulse walkthrough
 
-This guide is for engineers reviewing JobPulse to evaluate frontend engineering fundamentals, component architecture, accessibility, and client-side data resilience.
+A short tour of the app and what each part is meant to show.
 
----
+## 1. Header and focus strip
 
-## 2-Minute Feature Tour
+The summary counts tracked skills, total listing mentions, and closed tasks. Below it, the focus strip shows the skill with the most mentions and the next unfinished task.
 
-### 1. Market-to-Product Mapping
-- **Target Listing Matrix**: Inspect the 4 reference listings (Operations Tracker, Frontend Console, Component Studio, SaaS Metrics Lab). Notice how the project maps directly to requirements found in Remote and Estonia/EU full-stack listings.
-- **Top Signal & Next Move**: The top strip highlights the most-demanded skill (`React + TypeScript`) and the active roadmap task (`Add screenshots and responsive review`).
+## 2. Target listing matrix
 
-### 2. Client-Side State & Persistence
-- **Requirement Search & Sort**: Use the search input to filter skills in real time (e.g. search "REST" or "Quality"). Toggle sorting between "Most mentions" and "Alphabetical (A-Z)".
-- **Mention Counter**: Click "Add mention" on any requirement signal. The total mentions counter in the header updates immediately and saves to `localStorage`.
-- **New Signal Form**: Fill out the accessible form at the bottom right and click "Save signal". The new requirement appears immediately at the top of the list and persists across browser refreshes.
-- **Demo Data Reset**: Click "Reset to defaults" in the Reviewer Helper panel to restore pristine demo data at any time.
+Four reference listings with their requirements. The fit label (Best match, Good match, Stretch) and the note on each card say how JobPulse or a later project answers them.
 
-### 3. REST Integration Resilience
-- Click through the **Ready**, **Loading**, **Empty**, and **Error** scenario buttons under "Integration readiness".
-- Demonstrates how the frontend handles asynchronous lifecycle states and graceful fallbacks without introducing fragile external API dependencies.
+## 3. Integration states
 
-### 4. Backlog Progression
-- In the "Build order" queue, click the status button on any card (e.g. `Next`) to advance it to `In progress`, and again to advance to `Done`.
-- Notice how the "tasks closed" summary counter reacts dynamically.
+Pick Ready, Loading, Empty, or Error to see how the dashboard would present a remote listing source in each state. The Loading view shows a skeleton. These are static demo states; nothing is fetched.
 
-### 5. Data Ingestion & Export
-- Click **Import sample batch** to simulate receiving new requirement payloads.
-- Click **Export JSON** to trigger a client-generated blob download containing the complete active project state.
+## 4. Requirement signals
 
----
+- Filter by category, search skills and evidence, or sort by mentions or name. The count above the list updates as the filters change.
+- Add a mention on any card. The total in the header updates and the change is saved in `localStorage`.
 
-## Visual Previews
+## 5. Build queue
 
-### Desktop Layout (1440px)
-![JobPulse Desktop Dashboard](./screenshots/jobpulse-desktop.png)
+Each task shows its status and a button for the next step: Start, Complete, or Reopen.
 
-### Mobile Responsive Layout (390px)
-![JobPulse Mobile Dashboard](./screenshots/jobpulse-mobile.png)
+## 6. Import, export, and reset
 
----
+- **Import sample batch** merges three sample requirements once. Importing again is blocked until the demo data is reset.
+- **Export JSON** downloads the current signals and tasks.
+- **Reset to defaults** restores the seed data.
 
-## Automated Verification
+## 7. Add a signal
 
-Run the test suite, linter, and production build from the terminal:
+Submit the form empty, or with a skill that is already tracked, to see the inline errors. Focus moves to the first field that needs attention.
 
-```bash
-# Execute 12 Vitest unit tests
-npm test
+## Screenshots
 
-# Run Oxlint static analysis
-npm run lint
+### Desktop (1440px)
 
-# Compile TypeScript and Vite production bundle
-npm run build
+![JobPulse desktop layout](./screenshots/jobpulse-desktop.png)
 
-# Capture fresh screenshots via Playwright
-npm run screenshots
-```
+### Mobile (390px)
+
+![JobPulse mobile layout](./screenshots/jobpulse-mobile.png)
+
+Regenerate them with `npm run screenshots` after installing Playwright's Chromium once with `npx playwright install chromium`.

@@ -1,124 +1,77 @@
 # JobPulse
 
-A focused React + TypeScript application tracking recurring requirements across Remote and Estonia/EU full-stack listings and turning them into prioritized project features.
+[![CI](https://github.com/Taan1el/jobpulse/actions/workflows/ci.yml/badge.svg)](https://github.com/Taan1el/jobpulse/actions/workflows/ci.yml)
 
-[![CI Status](https://github.com/Taan1el/jobpulse/actions/workflows/ci.yml/badge.svg)](https://github.com/Taan1el/jobpulse/actions)
+JobPulse is a project: a React and TypeScript dashboard for tracking which skills keep showing up in frontend and full-stack job listings (Remote and Estonia/EU) and turning them into a build queue of project work. It runs entirely in the browser and stores its data in `localStorage`.
 
----
+![JobPulse dashboard at 1440px wide](docs/screenshots/jobpulse-desktop.png)
 
-## 2-Minute Walkthrough
-
-If you have 2 minutes to inspect this project, here is what matters:
-
-1. **The Problem It Solves**: Full-stack listings in Europe and Remote hubs frequently repeat the same stack demands: typed React interfaces, REST resilience, reusable component architecture, and clean testing habits. JobPulse visualizes these signals and connects them directly to project deliverables.
-2. **Intentional Frontend Scoping**: Instead of shipping an unnecessary toy server, the app is 100% frontend-only. It proves integration readiness by simulating REST lifecycle states (Loading skeletons, Data views, Empty fallbacks, Error recovery), handling JSON import/export, and using structured `localStorage` persistence.
-3. **Engineering Rigor**:
-   - **Type Safety**: End-to-end typed contracts in `shared/jobpulse.ts`.
-   - **Component Modularity**: Single-responsibility components in `src/components/` (SummaryGrid, FocusStrip, ListingMatrix, IntegrationStates, SignalList, ProjectQueue, DataActionsPanel, SignalForm).
-   - **Accessibility (a11y)**: Explicit form label associations, high-contrast `:focus-visible` styling, ARIA live announcements, and semantic HTML throughout.
-   - **Automated Quality**: Vitest unit suite covering state mutations, search, sorting, reset actions, and error recovery; Oxlint with 0 warnings; TypeScript strict build; and automated Playwright screenshot tests.
-
----
-
-## Visual Preview
-
-| Desktop Dashboard (1440px) | Mobile View (390px) |
-| :---: | :---: |
-| ![JobPulse Desktop](./docs/screenshots/jobpulse-desktop.png) | ![JobPulse Mobile](./docs/screenshots/jobpulse-mobile.png) |
-
-Detailed demo inspection notes and testing scenarios are documented in [docs/demo.md](docs/demo.md).
-
----
+A short walkthrough of each part of the app is in [docs/demo.md](docs/demo.md).
 
 ## Features
 
-- **Live Market Signals**: Browse recurring requirements with instant text search and sorting (Most mentions vs Alphabetical A-Z).
-- **Category Filter Tabs**: Isolate skills across Frontend, Backend, Product, and Quality areas.
-- **Target Listing Matrix**: Direct comparison against real European & Remote job specifications (Operations Tracker, Frontend Console, Component Studio, SaaS Metrics Lab).
-- **REST State Simulator**: Interactive toggle between Ready, Loading, Empty, and Error states demonstrating resilient UI data handling.
-- **Project Build Backlog**: Track project tasks through development stages (`Next` &rarr; `In progress` &rarr; `Done`).
-- **Data Handoff**: Mock import batch ingestion and full JSON snapshot export.
-- **Reviewer Reset**: One-click "Reset demo data" helper to restore sample data back to pristine baseline.
-- **Local Persistence**: Client-side storage in browser `localStorage` with graceful recovery from malformed data.
+- **Requirement signals**: filter by category, search skills and evidence, sort by mentions or name, and add a mention when a skill shows up again.
+- **Target listing matrix**: four reference listings with their requirements and how a project could answer them.
+- **Build queue**: project tasks move from Next to In progress to Done (and can be reopened), and the header counts closed tasks.
+- **Sample batch import**: merges three sample requirements once. Skills that are already tracked get one more mention and keep the text you wrote.
+- **Add signal form**: inline validation for empty fields and for skills that are already tracked.
+- **Integration states**: Ready, Loading, Empty, and Error views for a remote listing source. These are static demo states; the app makes no network requests.
+- **Export and reset**: download the current signals and tasks as JSON, or restore the seed data.
 
----
+## How it's built
 
-## Tech Stack
+- **State**: every change goes through a typed reducer ([src/state/jobPulseReducer.ts](src/state/jobPulseReducer.ts)) with one action per user intent. It is a pure function with its own unit tests.
+- **Persistence**: [src/state/storage.ts](src/state/storage.ts) saves to `localStorage` and checks every saved signal and task before restoring them. Anything malformed falls back to the seed data instead of crashing the page.
+- **Components**: presentational components live in [src/components](src/components). The signal form owns its field state and validation and passes a clean `NewSignal` up to the app.
+- **Accessibility**: semantic landmarks, lists, and fieldsets; labelled controls; visible focus styles; status messages through a live region that stays mounted; form errors linked with `aria-describedby`; reduced-motion support. axe-core runs in the test suite, and oxlint's jsx-a11y rules run in CI.
+- **Tests**: Vitest and React Testing Library cover user-facing behavior; the reducer and storage have unit tests.
+- **CI**: GitHub Actions runs lint, tests, and a production build on every push and pull request to `master`.
 
-- **Framework**: React 19 + TypeScript
-- **Bundler & Tooling**: Vite
-- **Linter**: Oxlint
-- **Testing**: Vitest + React Testing Library + jsdom
-- **Visual Capture**: Playwright Chromium automation
-- **CI / Automation**: GitHub Actions (`.github/workflows/ci.yml`)
+## Tech stack
 
----
+React 19, TypeScript, Vite, Vitest, React Testing Library, axe-core, oxlint, GitHub Actions, and Playwright for the screenshot script.
 
-## Quickstart
+## Run locally
+
+Requires Node.js 22.12 or newer (CI uses Node 24).
 
 ```bash
-# Install dependencies
 npm install
-
-# Start local dev server (http://localhost:5173)
 npm run dev
 ```
 
----
+## Scripts
 
-## Quality Checks
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server |
+| `npm test` | Run the test suite once |
+| `npm run lint` | Run oxlint |
+| `npm run build` | Type-check and build for production |
+| `npm run preview` | Serve the production build |
+| `npm run screenshots` | Capture desktop and mobile screenshots into `docs/screenshots/` |
 
-```bash
-# Run unit test suite (12 tests)
-npm test
+`npm run screenshots` needs Playwright's Chromium. Install it once with `npx playwright install chromium`.
 
-# Run linter
-npm run lint
+## Project structure
 
-# Run production build (TypeScript + Vite)
-npm run build
+```text
+shared/jobpulse.ts       Domain types and seed data
+src/App.tsx              Page layout, derived values, and event handlers
+src/components/          Presentational components and the signal form
+src/state/               Reducer, storage, and their unit tests
+src/App.test.tsx         Behavior tests through the UI
+src/App.a11y.test.tsx    axe checks for the main screen states
+scripts/                 Screenshot capture
+docs/                    Walkthrough, job-fit notes, and screenshots
 ```
 
----
+## Data and scope
 
-## Capture Fresh Screenshots
+- The target listings and their requirements come from the job-search notes in [docs/job-fit-strategy.md](docs/job-fit-strategy.md). Mention counts in the seed data are starting values for the demo, not scraped statistics.
+- There is no backend by design. Persistence is isolated in `src/state/storage.ts`, which is the piece an API client would replace.
 
-To capture fresh high-resolution desktop and mobile screenshots:
+## Next steps
 
-```bash
-npm run screenshots
-```
-
----
-
-## Architecture & Code Structure
-
-```
-jobpulse/
-├── .github/workflows/ci.yml     # Automated CI pipeline (lint, test, build)
-├── docs/
-│   ├── demo.md                  # Demo guide & verification steps
-│   ├── job-fit-strategy.md      # Market analysis and project roadmap
-│   └── screenshots/             # Desktop and mobile screenshots
-├── scripts/
-│   └── capture-screenshots.mjs  # Automated Playwright capture script
-├── shared/
-│   └── jobpulse.ts              # Domain types, initial seed data, contracts
-├── src/
-│   ├── components/              # Modular, accessible UI components
-│   │   ├── DataActionsPanel.tsx # Import, export, and reset controls
-│   │   ├── FocusStrip.tsx       # Priority signal & next move highlights
-│   │   ├── IntegrationStates.tsx# REST state simulator
-│   │   ├── ListingMatrix.tsx    # Target job listings match cards
-│   │   ├── ProjectQueue.tsx     # Development backlog progression
-│   │   ├── SignalForm.tsx       # Accessible requirement submission form
-│   │   ├── SignalList.tsx       # Searchable, filterable signal cards
-│   │   ├── SummaryGrid.tsx      # Top-level project metrics
-│   │   └── index.ts             # Clean component barrel exports
-│   ├── App.css                  # Custom design tokens, focus styles, responsive layout
-│   ├── App.test.tsx             # Comprehensive Vitest test suite
-│   ├── App.tsx                  # Root state orchestration & persistence
-│   └── main.tsx                 # Application entry point
-├── package.json
-└── tsconfig.json
-```
+- Extract the reusable UI pieces into a separate component library.
+- Deploy a preview build.
