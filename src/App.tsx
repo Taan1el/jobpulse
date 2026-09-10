@@ -24,9 +24,9 @@ import {
   SummaryGrid,
   type NewSignalForm,
 } from './components'
+import { loadState, saveState as persistState } from './state/storage'
 import './App.css'
 
-const storageKey = 'jobpulse-state-v1'
 const statusMessageDuration = 3500
 
 const categories: Array<'All' | SignalCategory> = [
@@ -45,22 +45,6 @@ const signalCategories = categories.filter(
 type StatusMessage = {
   id: number
   text: string
-}
-
-function loadState(): JobPulseState {
-  try {
-    const savedState = window.localStorage.getItem(storageKey)
-    if (!savedState) {
-      return initialState
-    }
-    const parsed = JSON.parse(savedState) as JobPulseState
-    if (!parsed || !Array.isArray(parsed.signals) || !Array.isArray(parsed.tasks)) {
-      return initialState
-    }
-    return parsed
-  } catch {
-    return initialState
-  }
 }
 
 function App() {
@@ -97,11 +81,7 @@ function App() {
 
   function saveState(nextState: JobPulseState) {
     setState(nextState)
-    try {
-      window.localStorage.setItem(storageKey, JSON.stringify(nextState))
-    } catch {
-      // Quota exceeded or private mode fallback
-    }
+    persistState(nextState)
   }
 
   const filteredSignals = useMemo(() => {
