@@ -3,6 +3,32 @@
   padding: 32px;
 }
 
+.toast-notification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #15202b;
+  color: #f7fafc;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: slideUp 200ms ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .workspace-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 520px);
@@ -12,6 +38,14 @@
   max-width: 1240px;
 }
 
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
 .eyebrow,
 .label,
 .category {
@@ -19,8 +53,17 @@
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  margin: 0 0 8px;
+  margin: 0;
   text-transform: uppercase;
+}
+
+.location-badge {
+  background: #e6eef8;
+  color: #1e4976;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
 }
 
 h1,
@@ -34,14 +77,44 @@ h1 {
   color: #15202b;
   font-size: clamp(3rem, 9vw, 6.8rem);
   line-height: 0.88;
-  margin-bottom: 0;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #51606d;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+.meta-pills {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .storage-status {
   color: #2b7886;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 800;
-  margin: 14px 0 0;
+  margin: 0;
+}
+
+.stack-badge,
+.mode-badge {
+  background: #f1f5f9;
+  border: 1px solid #d9e1e7;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.mode-badge {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
 }
 
 h2 {
@@ -86,6 +159,14 @@ button:hover {
   transform: translateY(-1px);
 }
 
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #2b7886;
+  outline-offset: 2px;
+}
+
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -98,6 +179,7 @@ button:hover {
 .task-card,
 .import-panel,
 .export-panel,
+.reset-panel,
 .signal-form {
   background: #ffffff;
   border: 1px solid #d9e1e7;
@@ -347,6 +429,60 @@ button:hover {
   color: #ffffff;
 }
 
+.signal-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.search-field,
+.sort-field {
+  display: grid;
+  gap: 6px;
+}
+
+.search-field label,
+.sort-field label {
+  color: #566674;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.search-field input,
+.sort-field select {
+  background: #ffffff;
+  border: 1px solid #d9e1e7;
+  border-radius: 6px;
+  color: #15202b;
+  min-height: 42px;
+  padding: 8px 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.empty-signals-state {
+  background: #ffffff;
+  border: 1px dashed #c9d6df;
+  border-radius: 8px;
+  padding: 36px 24px;
+  text-align: center;
+}
+
+.empty-title {
+  color: #15202b;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.empty-desc {
+  color: #566674;
+  margin-bottom: 0;
+}
+
 .signal-list,
 .task-list {
   display: grid;
@@ -405,6 +541,32 @@ button:hover {
   padding: 16px;
 }
 
+.task-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+
+.task-badge.next {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.task-badge.in-progress {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.task-badge.done {
+  background: #dcfce7;
+  color: #166534;
+}
+
 .task-card h3 {
   margin-bottom: 4px;
 }
@@ -418,14 +580,16 @@ button:hover {
 }
 
 .import-panel,
-.export-panel {
+.export-panel,
+.reset-panel {
   display: grid;
   gap: 14px;
   padding: 20px;
 }
 
 .import-panel p:last-child,
-.export-panel p:last-child {
+.export-panel p:last-child,
+.reset-panel p:last-child {
   margin-bottom: 0;
 }
 
@@ -453,10 +617,28 @@ button:hover {
   border-color: #244756;
 }
 
+.reset-action-btn {
+  background: #fdf2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+  min-height: 44px;
+}
+
+.reset-action-btn:hover {
+  background: #fee2e2;
+  border-color: #f87171;
+  color: #7f1d1d;
+}
+
 .signal-form {
   display: grid;
   gap: 14px;
   padding: 20px;
+}
+
+.signal-form .form-group {
+  display: grid;
+  gap: 6px;
 }
 
 .signal-form label {
@@ -503,7 +685,8 @@ button:hover {
   .focus-strip,
   .listing-grid,
   .integration-grid,
-  .content-grid {
+  .content-grid,
+  .signal-controls {
     grid-template-columns: 1fr;
   }
 
