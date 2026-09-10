@@ -199,6 +199,35 @@ describe('JobPulse', () => {
     expect(screen.getByText('9 mentions')).toBeInTheDocument()
   })
 
+  it('announces actions through a status region that stays mounted', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    const notifications = screen.getByRole('status', { name: 'Notifications' })
+    expect(notifications).toBeEmptyDOMElement()
+
+    await user.click(
+      screen.getByRole('button', { name: 'Add mention for React + TypeScript' }),
+    )
+
+    expect(notifications).toHaveTextContent(
+      'Incremented mentions for React + TypeScript',
+    )
+  })
+
+  it('reports how many signals match the current filters', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    expect(screen.getByText('Showing 5 of 5 signals')).toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('Search skills & requirements'), 'testing')
+
+    expect(screen.getByText('Showing 1 of 5 signals')).toBeInTheDocument()
+  })
+
   it('handles corrupted localStorage data without crashing', () => {
     window.localStorage.setItem('jobpulse-state-v1', '{invalid-json')
 

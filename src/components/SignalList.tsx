@@ -4,6 +4,7 @@ type SignalListProps = {
   activeCategory: 'All' | SignalCategory
   categories: Array<'All' | SignalCategory>
   signals: JobSignal[]
+  totalCount: number
   searchQuery: string
   sortOption: SignalSortOption
   onCategoryChange: (category: 'All' | SignalCategory) => void
@@ -16,6 +17,7 @@ export function SignalList({
   activeCategory,
   categories,
   signals,
+  totalCount,
   searchQuery,
   sortOption,
   onCategoryChange,
@@ -72,8 +74,13 @@ export function SignalList({
         </div>
       </div>
 
+      <output aria-live="polite" className="result-count" htmlFor="signal-search">
+        Showing {signals.length} of {totalCount}{' '}
+        {totalCount === 1 ? 'signal' : 'signals'}
+      </output>
+
       {signals.length === 0 ? (
-        <div className="empty-signals-state" role="status">
+        <div className="empty-signals-state">
           <p className="empty-title">No matching requirement signals</p>
           <p className="empty-desc">
             Try adjusting your search query or switching the category filter above.

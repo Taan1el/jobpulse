@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import {
   initialState,
@@ -27,6 +27,7 @@ import {
 import './App.css'
 
 const storageKey = 'jobpulse-state-v1'
+const statusMessageDuration = 3500
 
 const categories: Array<'All' | SignalCategory> = [
   'All',
@@ -39,6 +40,12 @@ const categories: Array<'All' | SignalCategory> = [
 const signalCategories = categories.filter(
   (category): category is SignalCategory => category !== 'All',
 )
+
+// A fresh id per message restarts the dismiss timer even when the text repeats.
+type StatusMessage = {
+  id: number
+  text: string
+}
 
 function loadState(): JobPulseState {
   try {
@@ -63,7 +70,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortOption, setSortOption] = useState<SignalSortOption>('mentions')
   const [activeScenarioId, setActiveScenarioId] = useState(1)
-  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null)
   const [form, setForm] = useState<NewSignalForm>({
     skill: '',
     category: 'Frontend',
@@ -71,11 +78,21 @@ function App() {
     projectAngle: '',
   })
 
-  function showToast(message: string) {
-    setToastMessage(message)
-    setTimeout(() => {
-      setToastMessage((current) => (current === message ? null : current))
-    }, 3500)
+  useEffect(() => {
+    if (!statusMessage) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(
+      () => setStatusMessage(null),
+      statusMessageDuration,
+    )
+
+    return () => window.clearTimeout(timeoutId)
+  }, [statusMessage])
+
+  function showToast(text: string) {
+    setStatusMessage({ id: Date.now(), text })
   }
 
   function saveState(nextState: JobPulseState) {
@@ -257,12 +274,6 @@ function App() {
 
   return (
     <div className="app-shell">
-      {toastMessage && (
-        <aside aria-live="polite" className="toast-notification" role="status">
-          {toastMessage}
-        </aside>
-      )}
-
       <header className="workspace-header">
         <div>
           <div className="header-meta">
@@ -306,6 +317,7 @@ function App() {
             searchQuery={searchQuery}
             signals={filteredSignals}
             sortOption={sortOption}
+            totalCount={state.signals.length}
           />
 
           <aside className="side-panel">
@@ -324,6 +336,15 @@ function App() {
             />
           </aside>
         </div>
+
+        {/* Stays mounted so screen readers pick up each new message. */}
+        <output aria-label="Notifications" aria-live="polite" className="status-region">
+          {statusMessage && (
+            <span className="toast-notification" key={statusMessage.id}>
+              {statusMessage.text}
+            </span>
+          )}
+        </output>
       </main>
     </div>
   )
