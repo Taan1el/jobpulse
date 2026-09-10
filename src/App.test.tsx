@@ -137,4 +137,76 @@ describe('JobPulse', () => {
     expect(click).toHaveBeenCalledTimes(1)
     expect(revokeObjectUrl).toHaveBeenCalledWith('blob:jobpulse')
   })
+
+  it('filters signals using the live search input', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    const searchInput = screen.getByLabelText('Search skills & requirements')
+    await user.type(searchInput, 'testing')
+
+    const signalList = screen.getByLabelText('Filtered requirement signals')
+    expect(within(signalList).getByText('Testing and linting')).toBeInTheDocument()
+    expect(within(signalList).queryByText('React + TypeScript')).not.toBeInTheDocument()
+  })
+
+  it('shows an empty state when search query matches nothing', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    const searchInput = screen.getByLabelText('Search skills & requirements')
+    await user.type(searchInput, 'NonExistentSkillXYZ')
+
+    expect(screen.getByText('No matching requirement signals')).toBeInTheDocument()
+    expect(
+      screen.getByText(/Try adjusting your search query/),
+    ).toBeInTheDocument()
+  })
+
+  it('sorts signals alphabetically when selected', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    const sortSelect = screen.getByLabelText('Sort by')
+    await user.selectOptions(sortSelect, 'alphabetical')
+
+    const signalHeaders = within(screen.getByLabelText('Filtered requirement signals'))
+      .getAllByRole('heading', { level: 3 })
+      .map((h) => h.textContent)
+
+    expect(signalHeaders[0]).toBe('Component systems')
+  })
+
+  it('resets demo data back to default baseline', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    // Add mention to change state
+    const addMentionBtn = screen.getByRole('button', {
+      name: 'Add mention for React + TypeScript',
+    })
+    await user.click(addMentionBtn)
+    expect(screen.getByText('10 mentions')).toBeInTheDocument()
+
+    // Click reset
+    await user.click(
+      screen.getByRole('button', { name: 'Reset project data to defaults' }),
+    )
+
+    // Baseline mentions for React + TypeScript is 9
+    expect(screen.getByText('9 mentions')).toBeInTheDocument()
+  })
+
+  it('handles corrupted localStorage data without crashing', () => {
+    window.localStorage.setItem('jobpulse-state-v1', '{invalid-json')
+
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: 'JobPulse' })).toBeInTheDocument()
+    expect(screen.getAllByText('React + TypeScript').length).toBeGreaterThanOrEqual(1)
+  })
 })
