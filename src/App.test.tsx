@@ -60,6 +60,19 @@ describe('JobPulse', () => {
     )
   })
 
+  it('switches REST-style integration states', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    expect(screen.getByText('Imported job signals')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Error' }))
+
+    expect(screen.getByText('Source unavailable')).toBeInTheDocument()
+    expect(screen.getByText(/Last local snapshot/)).toBeInTheDocument()
+  })
+
   it('advances tasks through the project queue', async () => {
     const user = userEvent.setup()
 

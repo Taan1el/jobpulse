@@ -217,6 +217,91 @@ button:hover {
   padding: 6px 8px;
 }
 
+.integration-section {
+  margin: 0 auto 24px;
+  max-width: 1240px;
+}
+
+.integration-section > .section-heading {
+  align-items: end;
+}
+
+.integration-section > .section-heading > p {
+  max-width: 520px;
+}
+
+.integration-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(180px, 0.35fr) minmax(0, 1fr);
+}
+
+.scenario-tabs {
+  background: #ffffff;
+  border: 1px solid #d9e1e7;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(27, 43, 52, 0.07);
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+
+.scenario-tabs button {
+  background: #f7faf9;
+  min-height: 42px;
+  text-align: left;
+}
+
+.scenario-tabs button.active {
+  background: #17313b;
+  border-color: #17313b;
+  color: #ffffff;
+}
+
+.scenario-card {
+  background: #ffffff;
+  border: 1px solid #d9e1e7;
+  border-left: 6px solid #2b7886;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(27, 43, 52, 0.07);
+  display: grid;
+  gap: 10px;
+  min-height: 178px;
+  padding: 20px;
+}
+
+.scenario-card.loading {
+  border-left-color: #8c6b2b;
+}
+
+.scenario-card.empty {
+  border-left-color: #566674;
+}
+
+.scenario-card.error {
+  border-left-color: #c1513f;
+}
+
+.scenario-card span {
+  color: #2b7886;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.scenario-card code {
+  background: #f3f6f5;
+  border: 1px solid #d9e1e7;
+  border-radius: 6px;
+  color: #243842;
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.86rem;
+  padding: 10px 12px;
+  white-space: normal;
+}
+
 .content-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr);
@@ -402,11 +487,13 @@ button:hover {
   .workspace-header,
   .focus-strip,
   .listing-grid,
+  .integration-grid,
   .content-grid {
     grid-template-columns: 1fr;
   }
 
-  .fit-section > .section-heading {
+  .fit-section > .section-heading,
+  .integration-section > .section-heading {
     align-items: stretch;
   }
 

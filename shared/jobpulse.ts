@@ -25,6 +25,14 @@ export type TargetListing = {
   projectMove: string
 }
 
+export type IntegrationScenario = {
+  id: number
+  status: 'Loading' | 'Ready' | 'Empty' | 'Error'
+  title: string
+  description: string
+  sample: string
+}
+
 export type JobPulseState = {
   signals: JobSignal[]
   tasks: ProjectTask[]
@@ -175,5 +183,40 @@ export const targetListings: TargetListing[] = [
     ],
     projectMove:
       'Build a SaaS funnel demo later with checkout, experiments, analytics events, and tests.',
+  },
+]
+
+export const integrationScenarios: IntegrationScenario[] = [
+  {
+    id: 1,
+    status: 'Ready',
+    title: 'Imported job signals',
+    description:
+      'The UI has usable data and can summarize repeated requirements from a listing batch.',
+    sample: '5 signals synced from the latest Remote/EU search.',
+  },
+  {
+    id: 2,
+    status: 'Loading',
+    title: 'Fetching listing batch',
+    description:
+      'The dashboard keeps the user oriented while a remote job-board request is in flight.',
+    sample: 'Checking React, TypeScript, remote, and Europe filters.',
+  },
+  {
+    id: 3,
+    status: 'Empty',
+    title: 'No matching listings',
+    description:
+      'The UI explains the empty state and suggests changing filters instead of showing a blank panel.',
+    sample: 'Try broadening the location filter or lowering the seniority match.',
+  },
+  {
+    id: 4,
+    status: 'Error',
+    title: 'Source unavailable',
+    description:
+      'The dashboard gives a human-readable failure state and keeps local planning data intact.',
+    sample: 'Remote source timed out. Last local snapshot is still available.',
   },
 ]

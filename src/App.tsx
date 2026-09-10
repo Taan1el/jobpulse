@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import {
   initialState,
+  integrationScenarios,
   targetListings,
   type JobPulseState,
   type JobSignal,
@@ -10,6 +11,7 @@ import {
 import {
   ExportPanel,
   FocusStrip,
+  IntegrationStates,
   ListingMatrix,
   ProjectQueue,
   SignalForm,
@@ -50,6 +52,7 @@ function App() {
   const [state, setState] = useState(loadState)
   const [activeCategory, setActiveCategory] =
     useState<(typeof categories)[number]>('All')
+  const [activeScenarioId, setActiveScenarioId] = useState(1)
   const [form, setForm] = useState<NewSignalForm>({
     skill: '',
     category: 'Frontend',
@@ -77,6 +80,9 @@ function App() {
   )
   const closedTaskCount = state.tasks.filter((task) => task.status === 'Done').length
   const nextTask = state.tasks.find((task) => task.status !== 'Done')
+  const activeScenario =
+    integrationScenarios.find((scenario) => scenario.id === activeScenarioId) ??
+    integrationScenarios[0]
 
   function saveState(nextState: typeof state) {
     setState(nextState)
@@ -175,6 +181,11 @@ function App() {
 
       <FocusStrip nextTask={nextTask} topSignal={topSignal} />
       <ListingMatrix listings={targetListings} />
+      <IntegrationStates
+        activeScenario={activeScenario}
+        onScenarioChange={setActiveScenarioId}
+        scenarios={integrationScenarios}
+      />
 
       <section className="content-grid">
         <SignalList

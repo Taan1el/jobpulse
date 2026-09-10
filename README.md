@@ -14,6 +14,7 @@ Full-stack and frontend listings for Remote and Europe-based roles often repeat 
 - Maintain a small build queue that maps requirements to project work.
 - Show summary metrics for tracked skills, listing mentions, and closed tasks.
 - Compare target job listings against the project roadmap.
+- Demonstrate loading, ready, empty, and error UI for REST-style data flows.
 - Export the current signals and build queue as JSON.
 - Organize the dashboard into reusable React sections.
 - Cover core dashboard behavior with automated tests.

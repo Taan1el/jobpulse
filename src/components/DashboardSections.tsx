@@ -1,5 +1,6 @@
 import type { FormEvent } from 'react'
 import type {
+  IntegrationScenario,
   JobSignal,
   ProjectTask,
   SignalCategory,
@@ -19,6 +20,12 @@ type FocusStripProps = {
 
 type ListingMatrixProps = {
   listings: TargetListing[]
+}
+
+type IntegrationStatesProps = {
+  activeScenario: IntegrationScenario
+  scenarios: IntegrationScenario[]
+  onScenarioChange: (scenarioId: number) => void
 }
 
 type SignalListProps = {
@@ -121,6 +128,47 @@ export function ListingMatrix({ listings }: ListingMatrixProps) {
             <p className="project-angle">{listing.projectMove}</p>
           </article>
         ))}
+      </div>
+    </section>
+  )
+}
+
+export function IntegrationStates({
+  activeScenario,
+  scenarios,
+  onScenarioChange,
+}: IntegrationStatesProps) {
+  return (
+    <section className="integration-section">
+      <div className="section-heading">
+        <div>
+          <p className="label">REST-style states</p>
+          <h2>Integration readiness</h2>
+        </div>
+        <p>
+          Shows how the dashboard would behave around remote data without adding
+          a custom server.
+        </p>
+      </div>
+      <div className="integration-grid">
+        <div className="scenario-tabs" aria-label="Choose integration state">
+          {scenarios.map((scenario) => (
+            <button
+              className={scenario.id === activeScenario.id ? 'active' : ''}
+              key={scenario.id}
+              onClick={() => onScenarioChange(scenario.id)}
+              type="button"
+            >
+              {scenario.status}
+            </button>
+          ))}
+        </div>
+        <article className={`scenario-card ${activeScenario.status.toLowerCase()}`}>
+          <span>{activeScenario.status}</span>
+          <h3>{activeScenario.title}</h3>
+          <p>{activeScenario.description}</p>
+          <code>{activeScenario.sample}</code>
+        </article>
       </div>
     </section>
   )
