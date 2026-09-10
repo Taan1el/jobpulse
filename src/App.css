@@ -706,6 +706,17 @@ button:hover {
   resize: vertical;
 }
 
+.signal-form [aria-invalid='true'] {
+  border-color: #c1513f;
+}
+
+.field-error {
+  color: #9f3f30;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0;
+}
+
 .primary-action {
   background: #c1513f;
   border-color: #c1513f;

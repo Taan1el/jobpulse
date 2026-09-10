@@ -47,4 +47,13 @@ describe('JobPulse accessibility', () => {
 
     expect(await findViolations(container)).toEqual([])
   }, 15000)
+
+  it('has no axe violations while the form shows errors', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<App />)
+
+    await user.click(screen.getByRole('button', { name: 'Save signal' }))
+
+    expect(await findViolations(container)).toEqual([])
+  }, 15000)
 })

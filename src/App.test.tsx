@@ -64,6 +64,45 @@ describe('JobPulse', () => {
     )
   })
 
+  it('shows inline errors instead of saving an incomplete signal', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    await user.type(screen.getByLabelText('Skill'), '   ')
+    await user.click(screen.getByRole('button', { name: 'Save signal' }))
+
+    const skillInput = screen.getByLabelText('Skill')
+
+    expect(skillInput).toHaveFocus()
+    expect(skillInput).toHaveAttribute('aria-invalid', 'true')
+    expect(skillInput).toHaveAccessibleDescription('Enter the skill or requirement.')
+    expect(screen.getByLabelText('Evidence')).toHaveAccessibleDescription(
+      'Describe where the requirement appeared.',
+    )
+    expect(screen.getByText('Showing 5 of 5 signals')).toBeInTheDocument()
+
+    await user.type(skillInput, 'GraphQL')
+
+    expect(skillInput).not.toHaveAttribute('aria-invalid')
+  })
+
+  it('points to Add mention when the skill is already tracked', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    await user.type(screen.getByLabelText('Skill'), 'rest integration')
+    await user.type(screen.getByLabelText('Evidence'), 'Seen in another listing.')
+    await user.type(screen.getByLabelText('Project angle'), 'Nothing new to build.')
+    await user.click(screen.getByRole('button', { name: 'Save signal' }))
+
+    expect(screen.getByLabelText('Skill')).toHaveAccessibleDescription(
+      '"rest integration" is already tracked. Use "Add mention" on its card instead.',
+    )
+    expect(screen.getByText('Showing 5 of 5 signals')).toBeInTheDocument()
+  })
+
   it('switches REST-style integration states', async () => {
     const user = userEvent.setup()
 

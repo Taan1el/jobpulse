@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useReducer, useState } from 'react'
-import type { FormEvent } from 'react'
 import {
   initialState,
   integrationScenarios,
@@ -19,9 +18,12 @@ import {
   SignalForm,
   SignalList,
   SummaryGrid,
-  type NewSignalForm,
 } from './components'
-import { findNewRequirements, jobPulseReducer } from './state/jobPulseReducer'
+import {
+  findNewRequirements,
+  jobPulseReducer,
+  type NewSignal,
+} from './state/jobPulseReducer'
 import { loadState, saveState } from './state/storage'
 import './App.css'
 
@@ -39,13 +41,6 @@ const signalCategories = categories.filter(
   (category): category is SignalCategory => category !== 'All',
 )
 
-const emptyForm: NewSignalForm = {
-  skill: '',
-  category: 'Frontend',
-  evidence: '',
-  projectAngle: '',
-}
-
 // A fresh id per message restarts the dismiss timer even when the text repeats.
 type StatusMessage = {
   id: number
@@ -60,7 +55,6 @@ function App() {
   const [sortOption, setSortOption] = useState<SignalSortOption>('mentions')
   const [activeScenarioId, setActiveScenarioId] = useState(1)
   const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null)
-  const [form, setForm] = useState<NewSignalForm>(emptyForm)
 
   useEffect(() => {
     saveState(state)
@@ -123,28 +117,15 @@ function App() {
   )
   const closedTaskCount = state.tasks.filter((task) => task.status === 'Done').length
   const nextTask = state.tasks.find((task) => task.status !== 'Done')
+  const trackedSkills = state.signals.map((signal) => signal.skill)
   const sampleBatchImported = state.importedBatchIds.includes(sampleListingBatch.id)
   const activeScenario =
     integrationScenarios.find((scenario) => scenario.id === activeScenarioId) ??
     integrationScenarios[0]
 
-  function addSignal(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
-    const skill = form.skill.trim()
-    const evidence = form.evidence.trim()
-    const projectAngle = form.projectAngle.trim()
-
-    if (!skill || !evidence || !projectAngle) {
-      return
-    }
-
-    dispatch({
-      type: 'signalAdded',
-      signal: { skill, category: form.category, evidence, projectAngle },
-    })
-    setForm(emptyForm)
-    showToast(`Added requirement: "${skill}"`)
+  function addSignal(signal: NewSignal) {
+    dispatch({ type: 'signalAdded', signal })
+    showToast(`Added requirement: "${signal.skill}"`)
   }
 
   function increaseMention(signalId: number) {
@@ -262,9 +243,8 @@ function App() {
             <ResetDataPanel onReset={resetDemoData} />
             <SignalForm
               categories={signalCategories}
-              form={form}
-              onFormChange={setForm}
-              onSubmit={addSignal}
+              existingSkills={trackedSkills}
+              onAdd={addSignal}
             />
           </aside>
         </div>
