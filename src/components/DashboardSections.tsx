@@ -41,6 +41,11 @@ type ProjectQueueProps = {
   onAdvanceTask: (taskId: number) => void
 }
 
+type ImportPanelProps = {
+  importedCount: number
+  onImport: () => void
+}
+
 export type NewSignalForm = {
   skill: string
   category: SignalCategory
@@ -277,6 +282,24 @@ export function ExportPanel({ onExport }: { onExport: () => void }) {
       </div>
       <button onClick={onExport} type="button">
         Export JSON
+      </button>
+    </section>
+  )
+}
+
+export function ImportPanel({ importedCount, onImport }: ImportPanelProps) {
+  return (
+    <section className="import-panel">
+      <div>
+        <p className="label">Mock import</p>
+        <h2>Listing batch</h2>
+        <p>
+          Load {importedCount} sample requirements to demonstrate REST-style data
+          ingestion without a backend.
+        </p>
+      </div>
+      <button onClick={onImport} type="button">
+        Import sample batch
       </button>
     </section>
   )

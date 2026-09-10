@@ -77,6 +77,20 @@ describe('JobPulse', () => {
     expect(screen.getByText(/Last local snapshot/)).toBeInTheDocument()
   })
 
+  it('imports a sample listing batch into local planning data', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: 'Import sample batch' }))
+
+    expect(screen.getByText('Accessibility')).toBeInTheDocument()
+    expect(screen.getByText('Responsive dashboards')).toBeInTheDocument()
+    expect(window.localStorage.getItem('jobpulse-state-v1')).toContain(
+      'Responsive dashboards',
+    )
+  })
+
   it('advances tasks through the project queue', async () => {
     const user = userEvent.setup()
 

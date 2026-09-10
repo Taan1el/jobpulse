@@ -33,6 +33,13 @@ export type IntegrationScenario = {
   sample: string
 }
 
+export type ImportedRequirement = {
+  skill: string
+  category: SignalCategory
+  evidence: string
+  projectAngle: string
+}
+
 export type JobPulseState = {
   signals: JobSignal[]
   tasks: ProjectTask[]
@@ -218,5 +225,32 @@ export const integrationScenarios: IntegrationScenario[] = [
     description:
       'The dashboard gives a human-readable failure state and keeps local planning data intact.',
     sample: 'Remote source timed out. Last local snapshot is still available.',
+  },
+]
+
+export const sampleListingBatch: ImportedRequirement[] = [
+  {
+    skill: 'Accessibility',
+    category: 'Quality',
+    evidence:
+      'Frontend listings increasingly mention accessible interfaces, semantic markup, and keyboard support.',
+    projectAngle:
+      'Add accessible names, pressed states, focus styles, and tests for key interactive controls.',
+  },
+  {
+    skill: 'Responsive dashboards',
+    category: 'Frontend',
+    evidence:
+      'React dashboard roles expect layouts that stay readable across laptop and mobile breakpoints.',
+    projectAngle:
+      'Capture desktop and mobile screenshots and refine cramped responsive sections.',
+  },
+  {
+    skill: 'CI workflows',
+    category: 'Quality',
+    evidence:
+      'Most roles mention Git, reliable delivery, and CI/CD habits as proof of maintainable work.',
+    projectAngle:
+      'Run lint, tests, and build through GitHub Actions on every push.',
   },
 ]

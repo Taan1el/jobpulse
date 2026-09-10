@@ -3,7 +3,9 @@ import type { FormEvent } from 'react'
 import {
   initialState,
   integrationScenarios,
+  sampleListingBatch,
   targetListings,
+  type ImportedRequirement,
   type JobPulseState,
   type JobSignal,
   type SignalCategory,
@@ -11,6 +13,7 @@ import {
 import {
   ExportPanel,
   FocusStrip,
+  ImportPanel,
   IntegrationStates,
   ListingMatrix,
   ProjectQueue,
@@ -146,6 +149,40 @@ function App() {
     })
   }
 
+  function importRequirements(requirements: ImportedRequirement[]) {
+    const existingSkills = new Map(
+      state.signals.map((signal) => [signal.skill.toLowerCase(), signal]),
+    )
+    const updatedSignals = state.signals.map((signal) => {
+      const importedRequirement = requirements.find(
+        (requirement) =>
+          requirement.skill.toLowerCase() === signal.skill.toLowerCase(),
+      )
+
+      if (!importedRequirement) {
+        return signal
+      }
+
+      return {
+        ...signal,
+        evidence: importedRequirement.evidence,
+        mentions: signal.mentions + 1,
+        projectAngle: importedRequirement.projectAngle,
+      }
+    })
+    const newSignals = requirements
+      .filter(
+        (requirement) => !existingSkills.has(requirement.skill.toLowerCase()),
+      )
+      .map((requirement, index) => ({
+        id: Date.now() + index,
+        mentions: 1,
+        ...requirement,
+      }))
+
+    saveState({ ...state, signals: [...newSignals, ...updatedSignals] })
+  }
+
   function exportSignals() {
     const exportPayload = {
       exportedAt: new Date().toISOString(),
@@ -198,6 +235,10 @@ function App() {
 
         <aside className="side-panel">
           <ProjectQueue onAdvanceTask={advanceTask} tasks={state.tasks} />
+          <ImportPanel
+            importedCount={sampleListingBatch.length}
+            onImport={() => importRequirements(sampleListingBatch)}
+          />
           <ExportPanel onExport={exportSignals} />
           <SignalForm
             categories={signalCategories}

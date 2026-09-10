@@ -17,6 +17,7 @@ See the demo notes and screenshots in [docs/demo.md](docs/demo.md).
 - Show summary metrics for tracked skills, listing mentions, and closed tasks.
 - Compare target job listings against the project roadmap.
 - Demonstrate loading, ready, empty, and error UI for REST-style data flows.
+- Import a sample listing batch into the local planning data.
 - Export the current signals and build queue as JSON.
 - Organize the dashboard into reusable React sections.
 - Cover core dashboard behavior with automated tests.
@@ -60,6 +61,5 @@ npm run screenshots
 
 ## Next Improvements
 
-- Improve keyboard and screen-reader details across interactive controls.
 - Extract the strongest reusable UI parts into a separate component-library repo.
 - Deploy a private preview build for review.
