@@ -1,6 +1,6 @@
 export * from './SummaryGrid'
 export * from './FocusStrip'
-export * from './ListingMatrix'
+export * from './ReferenceMatrix'
 export * from './IntegrationStates'
 export * from './SignalList'
 export * from './ProjectQueue'

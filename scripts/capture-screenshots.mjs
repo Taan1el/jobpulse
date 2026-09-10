@@ -25,7 +25,7 @@ try {
     await page.goto(baseUrl, { waitUntil: 'networkidle' })
     await page.screenshot({
       fullPage: true,
-      path: fileURLToPath(new URL(`jobpulse-${viewport.name}.png`, outputDir)),
+      path: fileURLToPath(new URL(`signaldesk-${viewport.name}.png`, outputDir)),
     })
     await page.close()
   }

@@ -3,20 +3,20 @@ import type { FormEvent } from 'react'
 import {
   initialState,
   integrationScenarios,
-  sampleListingBatch,
-  targetListings,
-  type ImportedRequirement,
-  type JobPulseState,
-  type JobSignal,
+  sampleSignalBatch,
+  referenceProfiles,
+  type ImportedSignal,
+  type SignalDeskState,
+  type WorkSignal,
   type SignalCategory,
   type SignalSortOption,
-} from '../shared/jobpulse'
+} from '../shared/signaldesk'
 import {
   ExportPanel,
   FocusStrip,
   ImportPanel,
   IntegrationStates,
-  ListingMatrix,
+  ReferenceMatrix,
   ProjectQueue,
   ResetDataPanel,
   SignalForm,
@@ -26,7 +26,7 @@ import {
 } from './components'
 import './App.css'
 
-const storageKey = 'jobpulse-state-v1'
+const storageKey = 'signaldesk-state-v1'
 
 const categories: Array<'All' | SignalCategory> = [
   'All',
@@ -40,13 +40,13 @@ const signalCategories = categories.filter(
   (category): category is SignalCategory => category !== 'All',
 )
 
-function loadState(): JobPulseState {
+function loadState(): SignalDeskState {
   try {
     const savedState = window.localStorage.getItem(storageKey)
     if (!savedState) {
       return initialState
     }
-    const parsed = JSON.parse(savedState) as JobPulseState
+    const parsed = JSON.parse(savedState) as SignalDeskState
     if (!parsed || !Array.isArray(parsed.signals) || !Array.isArray(parsed.tasks)) {
       return initialState
     }
@@ -57,7 +57,7 @@ function loadState(): JobPulseState {
 }
 
 function App() {
-  const [state, setState] = useState<JobPulseState>(loadState)
+  const [state, setState] = useState<SignalDeskState>(loadState)
   const [activeCategory, setActiveCategory] =
     useState<(typeof categories)[number]>('All')
   const [searchQuery, setSearchQuery] = useState('')
@@ -78,7 +78,7 @@ function App() {
     }, 3500)
   }
 
-  function saveState(nextState: JobPulseState) {
+  function saveState(nextState: SignalDeskState) {
     setState(nextState)
     try {
       window.localStorage.setItem(storageKey, JSON.stringify(nextState))
@@ -138,7 +138,7 @@ function App() {
       return
     }
 
-    const nextSignal: JobSignal = {
+    const nextSignal: WorkSignal = {
       id: Date.now(),
       skill: form.skill.trim(),
       category: form.category,
@@ -154,7 +154,7 @@ function App() {
       evidence: '',
       projectAngle: '',
     })
-    showToast(`Added requirement: "${nextSignal.skill}"`)
+    showToast(`Added signal: "${nextSignal.skill}"`)
   }
 
   function increaseMention(signalId: number) {
@@ -193,7 +193,7 @@ function App() {
     })
   }
 
-  function importRequirements(requirements: ImportedRequirement[]) {
+  function importRequirements(requirements: ImportedSignal[]) {
     const existingSkills = new Map(
       state.signals.map((signal) => [signal.skill.toLowerCase(), signal]),
     )
@@ -225,7 +225,7 @@ function App() {
       }))
 
     saveState({ ...state, signals: [...newSignals, ...updatedSignals] })
-    showToast(`Imported ${requirements.length} sample requirements`)
+    showToast(`Imported ${requirements.length} sample signals`)
   }
 
   function exportSignals() {
@@ -241,7 +241,7 @@ function App() {
     const link = document.createElement('a')
 
     link.href = url
-    link.download = 'jobpulse-signals.json'
+    link.download = 'signaldesk-signals.json'
     link.click()
     URL.revokeObjectURL(url)
     showToast('Exported signals snapshot as JSON')
@@ -266,12 +266,12 @@ function App() {
       <header className="workspace-header">
         <div>
           <div className="header-meta">
-            <span className="eyebrow">Full-Stack Market Tracker</span>
-            <span className="location-badge">Remote + Estonia / EU</span>
+            <span className="eyebrow">Technical Signal Tracker</span>
+            <span className="location-badge">Project planning</span>
           </div>
-          <h1>JobPulse</h1>
+          <h1>SignalDesk</h1>
           <p className="subtitle">
-            Turn real market requirements into prioritized project features.
+            Turn recurring technical signals into prioritized product work.
           </p>
           <div className="meta-pills">
             <span className="storage-status">Storage: Local browser</span>
@@ -287,7 +287,7 @@ function App() {
       </header>
 
       <FocusStrip nextTask={nextTask} topSignal={topSignal} />
-      <ListingMatrix listings={targetListings} />
+      <ReferenceMatrix profiles={referenceProfiles} />
       <IntegrationStates
         activeScenario={activeScenario}
         onScenarioChange={setActiveScenarioId}
@@ -310,8 +310,8 @@ function App() {
         <aside className="side-panel">
           <ProjectQueue onAdvanceTask={advanceTask} tasks={state.tasks} />
           <ImportPanel
-            importedCount={sampleListingBatch.length}
-            onImport={() => importRequirements(sampleListingBatch)}
+            importedCount={sampleSignalBatch.length}
+            onImport={() => importRequirements(sampleSignalBatch)}
           />
           <ExportPanel onExport={exportSignals} />
           <ResetDataPanel onReset={resetDemoData} />

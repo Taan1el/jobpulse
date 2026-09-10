@@ -1,4 +1,4 @@
-import type { ProjectTask } from '../../shared/jobpulse'
+import type { ProjectTask } from '../../shared/signaldesk'
 
 type ProjectQueueProps = {
   tasks: ProjectTask[]

@@ -16,7 +16,7 @@ export function ImportPanel({ importedCount, onImport }: ImportPanelProps) {
     <section className="import-panel" aria-labelledby="import-heading">
       <div>
         <p className="label">Mock import</p>
-        <h2 id="import-heading">Listing batch</h2>
+        <h2 id="import-heading">Signal batch</h2>
         <p>
           Load {importedCount} sample requirements to demonstrate REST-style data
           ingestion without a backend.
@@ -36,8 +36,7 @@ export function ExportPanel({ onExport }: ExportPanelProps) {
         <p className="label">Data handoff</p>
         <h2 id="export-heading">Export snapshot</h2>
         <p>
-          Download the current signals and build queue for a project note or
-          project-planning review.
+          Download the current signals and build queue for project planning.
         </p>
       </div>
       <button onClick={onExport} type="button">
@@ -51,7 +50,7 @@ export function ResetDataPanel({ onReset }: ResetPanelProps) {
   return (
     <section className="reset-panel" aria-labelledby="reset-heading">
       <div>
-        <p className="label">Reviewer helper</p>
+        <p className="label">Demo helper</p>
         <h2 id="reset-heading">Reset demo data</h2>
         <p>
           Restore initial signals and task statuses back to pristine defaults.

@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react'
-import type { SignalCategory } from '../../shared/jobpulse'
+import type { SignalCategory } from '../../shared/signaldesk'
 
 export type NewSignalForm = {
   skill: string

@@ -1,4 +1,4 @@
-import type { IntegrationScenario } from '../../shared/jobpulse'
+import type { IntegrationScenario } from '../../shared/signaldesk'
 
 type IntegrationStatesProps = {
   activeScenario: IntegrationScenario

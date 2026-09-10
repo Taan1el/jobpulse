@@ -236,13 +236,13 @@ textarea:focus-visible {
   max-width: 520px;
 }
 
-.listing-grid {
+.reference-grid {
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.listing-card {
+.reference-card {
   background: #ffffff;
   border: 1px solid #d9e1e7;
   border-radius: 8px;
@@ -252,11 +252,11 @@ textarea:focus-visible {
   padding: 18px;
 }
 
-.listing-card h3 {
+.reference-card h3 {
   margin: 10px 0 4px;
 }
 
-.listing-card p {
+.reference-card p {
   margin-bottom: 0;
 }
 
@@ -683,7 +683,7 @@ textarea:focus-visible {
 
   .workspace-header,
   .focus-strip,
-  .listing-grid,
+  .reference-grid,
   .integration-grid,
   .content-grid,
   .signal-controls {

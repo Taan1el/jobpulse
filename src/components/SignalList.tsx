@@ -1,9 +1,9 @@
-import type { JobSignal, SignalCategory, SignalSortOption } from '../../shared/jobpulse'
+import type { SignalCategory, SignalSortOption, WorkSignal } from '../../shared/signaldesk'
 
 type SignalListProps = {
   activeCategory: 'All' | SignalCategory
   categories: Array<'All' | SignalCategory>
-  signals: JobSignal[]
+  signals: WorkSignal[]
   searchQuery: string
   sortOption: SignalSortOption
   onCategoryChange: (category: 'All' | SignalCategory) => void
@@ -28,7 +28,7 @@ export function SignalList({
       <div className="section-heading">
         <div>
           <p className="label">Requirements</p>
-          <h2>Signals from listings</h2>
+          <h2>Technical signals</h2>
         </div>
         <div className="tabs" aria-label="Filter requirement signals">
           {categories.map((category) => (

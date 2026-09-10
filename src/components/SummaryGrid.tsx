@@ -17,7 +17,7 @@ export function SummaryGrid({
       </article>
       <article>
         <span>{totalMentions}</span>
-        <p>listing mentions</p>
+        <p>signal mentions</p>
       </article>
       <article>
         <span>{closedTaskCount}</span>
