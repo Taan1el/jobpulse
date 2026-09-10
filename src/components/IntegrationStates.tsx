@@ -42,6 +42,13 @@ export function IntegrationStates({
           <span>{activeScenario.status}</span>
           <h3>{activeScenario.title}</h3>
           <p>{activeScenario.description}</p>
+          {activeScenario.status === 'Loading' && (
+            <div aria-hidden="true" className="skeleton-lines">
+              <div className="skeleton-line" />
+              <div className="skeleton-line" />
+              <div className="skeleton-line" />
+            </div>
+          )}
           <code>{activeScenario.sample}</code>
         </article>
       </div>
