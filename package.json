@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev:api": "tsx server/index.ts",
+    "build": "tsc -b && tsc -p tsconfig.server.json && vite build",
     "lint": "oxlint",
+    "start:api": "node dist-server/server/index.js",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -19,6 +21,7 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
+    "tsx": "^4.21.0",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
   }

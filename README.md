@@ -10,7 +10,7 @@ Full-stack listings for Remote and Europe-based roles often repeat the same them
 
 - Track skills and requirements found in job listings.
 - Filter requirements by frontend, backend, product, and quality categories.
-- Save new requirement signals in local browser storage.
+- Save new requirement signals through a local Node API with browser fallback.
 - Maintain a small build queue that maps requirements to project work.
 - Show summary metrics for tracked skills, listing mentions, and closed tasks.
 - Export the current signals and build queue as JSON.
@@ -21,12 +21,19 @@ Full-stack listings for Remote and Europe-based roles often repeat the same them
 - TypeScript
 - Vite
 - Oxlint
-- Browser localStorage for the first persistence layer
+- Node HTTP API
+- JSON file persistence
 
 ## Run Locally
 
 ```bash
 npm install
+npm run dev:api
+```
+
+In a second terminal:
+
+```bash
 npm run dev
 ```
 
@@ -40,7 +47,7 @@ npm run build
 ## Next Improvements
 
 - Add a small Node API for saved signals and tasks.
-- Move storage from localStorage to a simple database.
+- Move JSON storage to SQLite or PostgreSQL.
 - Add tests around signal filtering and task status changes.
 - Add screenshots after the first UI polish pass.
 - Deploy a private preview build for review.

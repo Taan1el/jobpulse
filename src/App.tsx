@@ -1,24 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
+import {
+  initialState,
+  type JobPulseState,
+  type JobSignal,
+  type SignalCategory,
+} from '../shared/jobpulse'
 import './App.css'
-
-type SignalCategory = 'Frontend' | 'Backend' | 'Product' | 'Quality'
-
-type JobSignal = {
-  id: number
-  skill: string
-  category: SignalCategory
-  mentions: number
-  evidence: string
-  projectAngle: string
-}
-
-type ProjectTask = {
-  id: number
-  title: string
-  requirement: string
-  status: 'Next' | 'In progress' | 'Done'
-}
 
 type NewSignalForm = {
   skill: string
@@ -28,62 +16,6 @@ type NewSignalForm = {
 }
 
 const storageKey = 'jobpulse-state-v1'
-
-const initialSignals: JobSignal[] = [
-  {
-    id: 1,
-    skill: 'React + TypeScript',
-    category: 'Frontend',
-    mentions: 9,
-    evidence: 'Remote EU listings repeatedly ask for typed React interfaces.',
-    projectAngle: 'Build an interactive dashboard with typed components and state.',
-  },
-  {
-    id: 2,
-    skill: 'Node APIs',
-    category: 'Backend',
-    mentions: 7,
-    evidence: 'Full-stack roles mention backend APIs, integrations, and maintenance.',
-    projectAngle: 'Add a small API layer for saved job signals and project notes.',
-  },
-  {
-    id: 3,
-    skill: 'SaaS workflows',
-    category: 'Product',
-    mentions: 6,
-    evidence: 'Listings describe modern SaaS platforms and customer-facing tools.',
-    projectAngle: 'Model a real workflow with filtering, prioritization, and summaries.',
-  },
-  {
-    id: 4,
-    skill: 'Testing and linting',
-    category: 'Quality',
-    mentions: 5,
-    evidence: 'Most roles still expect clean delivery habits.',
-    projectAngle: 'Keep builds green and add focused component or domain tests.',
-  },
-]
-
-const initialTasks: ProjectTask[] = [
-  {
-    id: 1,
-    title: 'Ship the signal dashboard',
-    requirement: 'React, TypeScript, product thinking',
-    status: 'In progress',
-  },
-  {
-    id: 2,
-    title: 'Add persistent API storage',
-    requirement: 'Node APIs, data modeling',
-    status: 'Next',
-  },
-  {
-    id: 3,
-    title: 'Write acceptance tests',
-    requirement: 'Quality habits, maintainability',
-    status: 'Next',
-  },
-]
 
 const categories: Array<'All' | SignalCategory> = [
   'All',
@@ -98,20 +30,20 @@ function loadState() {
     const savedState = window.localStorage.getItem(storageKey)
 
     if (!savedState) {
-      return { signals: initialSignals, tasks: initialTasks }
+      return initialState
     }
 
-    return JSON.parse(savedState) as {
-      signals: JobSignal[]
-      tasks: ProjectTask[]
-    }
+    return JSON.parse(savedState) as JobPulseState
   } catch {
-    return { signals: initialSignals, tasks: initialTasks }
+    return initialState
   }
 }
 
 function App() {
   const [state, setState] = useState(loadState)
+  const [apiStatus, setApiStatus] = useState<'Checking' | 'Connected' | 'Local'>(
+    'Checking',
+  )
   const [activeCategory, setActiveCategory] =
     useState<(typeof categories)[number]>('All')
   const [form, setForm] = useState<NewSignalForm>({
@@ -142,9 +74,57 @@ function App() {
 
   const nextTask = state.tasks.find((task) => task.status !== 'Done')
 
-  function saveState(nextState: typeof state) {
+  useEffect(() => {
+    let ignoreResponse = false
+
+    async function loadApiState() {
+      try {
+        const response = await fetch('/api/state')
+
+        if (!response.ok) {
+          throw new Error('API unavailable')
+        }
+
+        const apiState = (await response.json()) as JobPulseState
+
+        if (!ignoreResponse) {
+          setState(apiState)
+          window.localStorage.setItem(storageKey, JSON.stringify(apiState))
+          setApiStatus('Connected')
+        }
+      } catch {
+        if (!ignoreResponse) {
+          setApiStatus('Local')
+        }
+      }
+    }
+
+    loadApiState()
+
+    return () => {
+      ignoreResponse = true
+    }
+  }, [])
+
+  async function saveState(nextState: typeof state) {
     setState(nextState)
     window.localStorage.setItem(storageKey, JSON.stringify(nextState))
+
+    try {
+      const response = await fetch('/api/state', {
+        body: JSON.stringify(nextState),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'PUT',
+      })
+
+      if (!response.ok) {
+        throw new Error('API save failed')
+      }
+
+      setApiStatus('Connected')
+    } catch {
+      setApiStatus('Local')
+    }
   }
 
   function addSignal(event: FormEvent<HTMLFormElement>) {
@@ -228,6 +208,7 @@ function App() {
         <div>
           <p className="eyebrow">full-stack market tracker</p>
           <h1>JobPulse</h1>
+          <p className="api-status">Storage: {apiStatus}</p>
         </div>
         <div className="summary-grid" aria-label="Project signal summary">
           <article>

@@ -37,6 +37,13 @@ h1 {
   margin-bottom: 0;
 }
 
+.api-status {
+  color: #2b7886;
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin: 14px 0 0;
+}
+
 h2 {
   color: #17212b;
   font-size: 1.35rem;
