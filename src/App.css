@@ -239,7 +239,7 @@ button:hover {
 .listing-grid {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 }
 
 .listing-card {
@@ -699,7 +699,6 @@ button:hover {
 
   .workspace-header,
   .focus-strip,
-  .listing-grid,
   .integration-grid,
   .content-grid,
   .signal-controls {
@@ -716,13 +715,15 @@ button:hover {
     gap: 8px;
   }
 
+  .tabs {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 520px) {
   .card-actions,
   .task-card {
     align-items: stretch;
     grid-template-columns: 1fr;
-  }
-
-  .tabs {
-    justify-content: flex-start;
   }
 }
