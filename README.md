@@ -13,6 +13,7 @@ Full-stack listings for Remote and Europe-based roles often repeat the same them
 - Save new requirement signals in local browser storage.
 - Maintain a small build queue that maps requirements to project work.
 - Show summary metrics for tracked skills, listing mentions, and closed tasks.
+- Export the current signals and build queue as JSON.
 
 ## Tech Stack
 
@@ -42,4 +43,4 @@ npm run build
 - Move storage from localStorage to a simple database.
 - Add tests around signal filtering and task status changes.
 - Add screenshots after the first UI polish pass.
-- Prepare a private GitHub repository once GitHub CLI auth is available.
+- Deploy a private preview build for review.

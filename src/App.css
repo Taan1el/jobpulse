@@ -89,6 +89,7 @@ button:hover {
 .focus-strip,
 .signal-card,
 .task-card,
+.export-panel,
 .signal-form {
   background: #ffffff;
   border: 1px solid #d9e1e7;
@@ -244,6 +245,28 @@ button:hover {
 
 .task-card button {
   min-width: 96px;
+}
+
+.export-panel {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+}
+
+.export-panel p:last-child {
+  margin-bottom: 0;
+}
+
+.export-panel button {
+  background: #17313b;
+  border-color: #17313b;
+  color: #ffffff;
+  min-height: 44px;
+}
+
+.export-panel button:hover {
+  background: #244756;
+  border-color: #244756;
 }
 
 .signal-form {

@@ -204,6 +204,24 @@ function App() {
     })
   }
 
+  function exportSignals() {
+    const exportPayload = {
+      exportedAt: new Date().toISOString(),
+      signals: state.signals,
+      tasks: state.tasks,
+    }
+    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], {
+      type: 'application/json',
+    })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+
+    link.href = url
+    link.download = 'jobpulse-signals.json'
+    link.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <main className="app-shell">
       <section className="workspace-header">
@@ -302,6 +320,20 @@ function App() {
                 </article>
               ))}
             </div>
+          </section>
+
+          <section className="export-panel">
+            <div>
+              <p className="label">Data handoff</p>
+              <h2>Export snapshot</h2>
+              <p>
+                Download the current signals and build queue for a project note
+                or later API import.
+              </p>
+            </div>
+            <button onClick={exportSignals} type="button">
+              Export JSON
+            </button>
           </section>
 
           <form className="signal-form" onSubmit={addSignal}>
