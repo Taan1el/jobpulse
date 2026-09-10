@@ -35,6 +35,10 @@ describe('JobPulse', () => {
 
     expect(within(signalList).getByText('REST integration')).toBeInTheDocument()
     expect(within(signalList).queryByText('React + TypeScript')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Backend' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
   })
 
   it('adds a new job signal and saves it locally', async () => {
@@ -78,18 +82,24 @@ describe('JobPulse', () => {
 
     render(<App />)
 
-    const taskCard = screen.getByRole('button', { name: 'Next' }).closest('article')
+    const taskCard = screen
+      .getByRole('button', {
+        name: 'Advance Add screenshots and responsive review from Next',
+      })
+      .closest('article')
 
     expect(taskCard).not.toBeNull()
 
     await user.click(
       within(taskCard as HTMLElement).getByRole('button', {
-        name: 'Next',
+        name: 'Advance Add screenshots and responsive review from Next',
       }),
     )
 
     expect(
-      within(taskCard as HTMLElement).getByRole('button', { name: 'In progress' }),
+      within(taskCard as HTMLElement).getByRole('button', {
+        name: 'Advance Add screenshots and responsive review from In progress',
+      }),
     ).toBeInTheDocument()
   })
 

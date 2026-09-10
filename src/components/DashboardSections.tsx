@@ -110,7 +110,11 @@ export function ListingMatrix({ listings }: ListingMatrixProps) {
       </div>
       <div className="listing-grid">
         {listings.map((listing) => (
-          <article className="listing-card" key={listing.id}>
+          <article
+            aria-label={`${listing.company}: ${listing.role}`}
+            className="listing-card"
+            key={listing.id}
+          >
             <div className="listing-title">
               <div>
                 <span className={`fit-pill ${listing.fit.toLowerCase().replace(' ', '-')}`}>
@@ -154,6 +158,7 @@ export function IntegrationStates({
         <div className="scenario-tabs" aria-label="Choose integration state">
           {scenarios.map((scenario) => (
             <button
+              aria-pressed={scenario.id === activeScenario.id}
               className={scenario.id === activeScenario.id ? 'active' : ''}
               key={scenario.id}
               onClick={() => onScenarioChange(scenario.id)}
@@ -191,6 +196,7 @@ export function SignalList({
         <div className="tabs" aria-label="Filter requirement signals">
           {categories.map((category) => (
             <button
+              aria-pressed={category === activeCategory}
               className={category === activeCategory ? 'active' : ''}
               key={category}
               onClick={() => onCategoryChange(category)}
@@ -213,7 +219,11 @@ export function SignalList({
             <p className="project-angle">{signal.projectAngle}</p>
             <div className="card-actions">
               <span>{signal.mentions} mentions</span>
-              <button onClick={() => onIncreaseMention(signal.id)} type="button">
+              <button
+                aria-label={`Add mention for ${signal.skill}`}
+                onClick={() => onIncreaseMention(signal.id)}
+                type="button"
+              >
                 Add mention
               </button>
             </div>
@@ -240,7 +250,11 @@ export function ProjectQueue({ tasks, onAdvanceTask }: ProjectQueueProps) {
               <h3>{task.title}</h3>
               <p>{task.requirement}</p>
             </div>
-            <button onClick={() => onAdvanceTask(task.id)} type="button">
+            <button
+              aria-label={`Advance ${task.title} from ${task.status}`}
+              onClick={() => onAdvanceTask(task.id)}
+              type="button"
+            >
               {task.status}
             </button>
           </article>
