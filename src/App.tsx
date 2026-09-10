@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import {
   initialState,
+  targetListings,
   type JobPulseState,
   type JobSignal,
   type SignalCategory,
@@ -41,9 +42,6 @@ function loadState() {
 
 function App() {
   const [state, setState] = useState(loadState)
-  const [apiStatus, setApiStatus] = useState<'Checking' | 'Connected' | 'Local'>(
-    'Checking',
-  )
   const [activeCategory, setActiveCategory] =
     useState<(typeof categories)[number]>('All')
   const [form, setForm] = useState<NewSignalForm>({
@@ -74,57 +72,9 @@ function App() {
 
   const nextTask = state.tasks.find((task) => task.status !== 'Done')
 
-  useEffect(() => {
-    let ignoreResponse = false
-
-    async function loadApiState() {
-      try {
-        const response = await fetch('/api/state')
-
-        if (!response.ok) {
-          throw new Error('API unavailable')
-        }
-
-        const apiState = (await response.json()) as JobPulseState
-
-        if (!ignoreResponse) {
-          setState(apiState)
-          window.localStorage.setItem(storageKey, JSON.stringify(apiState))
-          setApiStatus('Connected')
-        }
-      } catch {
-        if (!ignoreResponse) {
-          setApiStatus('Local')
-        }
-      }
-    }
-
-    loadApiState()
-
-    return () => {
-      ignoreResponse = true
-    }
-  }, [])
-
-  async function saveState(nextState: typeof state) {
+  function saveState(nextState: typeof state) {
     setState(nextState)
     window.localStorage.setItem(storageKey, JSON.stringify(nextState))
-
-    try {
-      const response = await fetch('/api/state', {
-        body: JSON.stringify(nextState),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'PUT',
-      })
-
-      if (!response.ok) {
-        throw new Error('API save failed')
-      }
-
-      setApiStatus('Connected')
-    } catch {
-      setApiStatus('Local')
-    }
   }
 
   function addSignal(event: FormEvent<HTMLFormElement>) {
@@ -208,7 +158,7 @@ function App() {
         <div>
           <p className="eyebrow">full-stack market tracker</p>
           <h1>JobPulse</h1>
-          <p className="api-status">Storage: {apiStatus}</p>
+          <p className="storage-status">Storage: Local browser</p>
         </div>
         <div className="summary-grid" aria-label="Project signal summary">
           <article>
@@ -236,6 +186,40 @@ function App() {
           <p className="label">Next project move</p>
           <h2>{nextTask?.title ?? 'Project queue clear'}</h2>
           <p>{nextTask?.requirement ?? 'Add a fresh improvement from the market.'}</p>
+        </div>
+      </section>
+
+      <section className="fit-section">
+        <div className="section-heading">
+          <div>
+            <p className="label">Job fit</p>
+            <h2>Target listing matrix</h2>
+          </div>
+          <p>
+            Ranked by how directly JobPulse and the next projects can
+            answer the requirements.
+          </p>
+        </div>
+        <div className="listing-grid">
+          {targetListings.map((listing) => (
+            <article className="listing-card" key={listing.id}>
+              <div className="listing-title">
+                <div>
+                  <span className={`fit-pill ${listing.fit.toLowerCase().replace(' ', '-')}`}>
+                    {listing.fit}
+                  </span>
+                  <h3>{listing.company}</h3>
+                  <p>{listing.role}</p>
+                </div>
+              </div>
+              <div className="requirement-tags">
+                {listing.requirements.map((requirement) => (
+                  <span key={requirement}>{requirement}</span>
+                ))}
+              </div>
+              <p className="project-angle">{listing.projectMove}</p>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -309,7 +293,7 @@ function App() {
               <h2>Export snapshot</h2>
               <p>
                 Download the current signals and build queue for a project note
-                or later API import.
+                or project-planning review.
               </p>
             </div>
             <button onClick={exportSignals} type="button">

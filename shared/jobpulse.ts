@@ -16,6 +16,15 @@ export type ProjectTask = {
   status: 'Next' | 'In progress' | 'Done'
 }
 
+export type TargetListing = {
+  id: number
+  company: string
+  role: string
+  fit: 'Best match' | 'Good match' | 'Stretch'
+  requirements: string[]
+  projectMove: string
+}
+
 export type JobPulseState = {
   signals: JobSignal[]
   tasks: ProjectTask[]
@@ -32,11 +41,11 @@ export const initialSignals: JobSignal[] = [
   },
   {
     id: 2,
-    skill: 'Node APIs',
+    skill: 'REST integration',
     category: 'Backend',
     mentions: 7,
-    evidence: 'Full-stack roles mention backend APIs, integrations, and maintenance.',
-    projectAngle: 'Add a small API layer for saved job signals and project notes.',
+    evidence: 'Frontend and full-stack listings mention REST APIs and integrations.',
+    projectAngle: 'Show clean loading, error, empty, and saved states around data flows.',
   },
   {
     id: 3,
@@ -54,6 +63,14 @@ export const initialSignals: JobSignal[] = [
     evidence: 'Most roles still expect clean delivery habits.',
     projectAngle: 'Keep builds green and add focused component or domain tests.',
   },
+  {
+    id: 5,
+    skill: 'Component systems',
+    category: 'Frontend',
+    mentions: 4,
+    evidence: 'Frontend stretch roles mention Storybook and reusable UI libraries.',
+    projectAngle: 'Extract reusable filters, metric cards, forms, and status controls.',
+  },
 ]
 
 export const initialTasks: ProjectTask[] = [
@@ -65,8 +82,8 @@ export const initialTasks: ProjectTask[] = [
   },
   {
     id: 2,
-    title: 'Add persistent API storage',
-    requirement: 'Node APIs, data modeling',
+    title: 'Add job-fit matrix',
+    requirement: 'Product thinking, readable project mapping',
     status: 'In progress',
   },
   {
@@ -81,3 +98,70 @@ export const initialState: JobPulseState = {
   signals: initialSignals,
   tasks: initialTasks,
 }
+
+export const targetListings: TargetListing[] = [
+  {
+    id: 1,
+    company: 'Operations Tracker',
+    role: 'Full-Stack JavaScript Developer',
+    fit: 'Best match',
+    requirements: [
+      'React',
+      'TypeScript',
+      'Node fundamentals',
+      'Database basics',
+      'Docker or cloud basics',
+      'CI/CD habits',
+    ],
+    projectMove:
+      'Use JobPulse to show typed UI, project prioritization, persistence, tests, and deployment readiness.',
+  },
+  {
+    id: 2,
+    company: 'Frontend Console',
+    role: 'Frontend Engineer',
+    fit: 'Good match',
+    requirements: [
+      'React',
+      'TypeScript',
+      'REST APIs',
+      'Git',
+      'Clean code',
+      'Independent delivery',
+    ],
+    projectMove:
+      'Polish JobPulse interactions, responsive states, README clarity, and commit history.',
+  },
+  {
+    id: 3,
+    company: 'Component Studio OU',
+    role: 'Frontend Developer, React / Next.js',
+    fit: 'Stretch',
+    requirements: [
+      'React',
+      'Next.js',
+      'TypeScript',
+      'Tailwind',
+      'Storybook',
+      'Component libraries',
+    ],
+    projectMove:
+      'Create a separate component-library repo after JobPulse has reusable UI patterns worth extracting.',
+  },
+  {
+    id: 4,
+    company: 'SaaS Metrics Lab',
+    role: 'Full-Stack Web Developer TypeScript',
+    fit: 'Stretch',
+    requirements: [
+      'TypeScript',
+      'Next or Astro',
+      'PostgreSQL',
+      'Vercel',
+      'Payments',
+      'Vitest',
+    ],
+    projectMove:
+      'Build a SaaS funnel demo later with checkout, experiments, analytics events, and tests.',
+  },
+]
