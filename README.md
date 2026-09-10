@@ -6,6 +6,8 @@ JobPulse is a frontend project in progress. It is a React and TypeScript dashboa
 
 Full-stack and frontend listings for Remote and Europe-based roles often repeat the same themes: typed React interfaces, REST integration, SaaS workflows, reusable components, clean delivery habits, and deployment readiness. JobPulse makes those signals visible and turns them into concrete project tasks.
 
+See the demo notes and screenshots in [docs/demo.md](docs/demo.md).
+
 ## Current Features
 
 - Track skills and requirements found in job listings.
@@ -19,6 +21,7 @@ Full-stack and frontend listings for Remote and Europe-based roles often repeat 
 - Organize the dashboard into reusable React sections.
 - Cover core dashboard behavior with automated tests.
 - Run lint, tests, and build in GitHub Actions.
+- Include desktop and mobile screenshots for quick review.
 
 ## Tech Stack
 
@@ -30,6 +33,7 @@ Full-stack and frontend listings for Remote and Europe-based roles often repeat 
 - Vitest
 - React Testing Library
 - GitHub Actions
+- Playwright for screenshots
 
 ## Run Locally
 
@@ -46,9 +50,16 @@ npm run lint
 npm run build
 ```
 
+## Screenshots
+
+Start the app with `npm run dev`, then capture fresh screenshots:
+
+```bash
+npm run screenshots
+```
+
 ## Next Improvements
 
-- Add screenshots after the first responsive polish pass.
 - Improve keyboard and screen-reader details across interactive controls.
 - Extract the strongest reusable UI parts into a separate component-library repo.
 - Deploy a private preview build for review.

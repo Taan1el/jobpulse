@@ -497,7 +497,11 @@ button:hover {
     align-items: stretch;
   }
 
-  .section-heading,
+  .section-heading {
+    flex-direction: column;
+    gap: 8px;
+  }
+
   .card-actions,
   .task-card {
     align-items: stretch;
