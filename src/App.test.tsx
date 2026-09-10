@@ -91,29 +91,27 @@ describe('JobPulse', () => {
     )
   })
 
-  it('advances tasks through the project queue', async () => {
+  it('moves a task through the project queue', async () => {
     const user = userEvent.setup()
+    const task = 'Add screenshots and responsive review'
 
     render(<App />)
 
+    await user.click(screen.getByRole('button', { name: `Start: ${task}` }))
+
     const taskCard = screen
-      .getByRole('button', {
-        name: 'Advance Add screenshots and responsive review from Next',
-      })
+      .getByRole('button', { name: `Complete: ${task}` })
       .closest('article')
 
-    expect(taskCard).not.toBeNull()
+    expect(taskCard).toHaveTextContent('In progress')
 
     await user.click(
-      within(taskCard as HTMLElement).getByRole('button', {
-        name: 'Advance Add screenshots and responsive review from Next',
-      }),
+      within(taskCard as HTMLElement).getByRole('button', { name: `Complete: ${task}` }),
     )
 
+    expect(taskCard).toHaveTextContent('Done')
     expect(
-      within(taskCard as HTMLElement).getByRole('button', {
-        name: 'Advance Add screenshots and responsive review from In progress',
-      }),
+      within(taskCard as HTMLElement).getByRole('button', { name: `Reopen: ${task}` }),
     ).toBeInTheDocument()
   })
 

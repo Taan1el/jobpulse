@@ -5,6 +5,13 @@ type ProjectQueueProps = {
   onAdvanceTask: (taskId: number) => void
 }
 
+// The button names the step it performs; the badge already shows the status.
+const actionLabels: Record<ProjectTask['status'], string> = {
+  Next: 'Start',
+  'In progress': 'Complete',
+  Done: 'Reopen',
+}
+
 export function ProjectQueue({ tasks, onAdvanceTask }: ProjectQueueProps) {
   return (
     <section className="queue-section" aria-labelledby="queue-heading">
@@ -17,6 +24,7 @@ export function ProjectQueue({ tasks, onAdvanceTask }: ProjectQueueProps) {
       <ol className="task-list">
         {tasks.map((task) => {
           const statusClass = task.status.toLowerCase().replace(' ', '-')
+          const actionLabel = actionLabels[task.status]
 
           return (
             <li key={task.id}>
@@ -27,12 +35,12 @@ export function ProjectQueue({ tasks, onAdvanceTask }: ProjectQueueProps) {
                   <p>{task.requirement}</p>
                 </div>
                 <button
-                  aria-label={`Advance ${task.title} from ${task.status}`}
-                  className={`task-action-btn ${statusClass}`}
+                  aria-label={`${actionLabel}: ${task.title}`}
+                  className="task-action-btn"
                   onClick={() => onAdvanceTask(task.id)}
                   type="button"
                 >
-                  {task.status}
+                  {actionLabel}
                 </button>
               </article>
             </li>
