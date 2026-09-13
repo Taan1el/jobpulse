@@ -11,8 +11,7 @@ This note keeps SignalDesk's product direction close to the codebase so future c
 
 ## Improvement Backlog
 
-1. Add frontend tests around filtering and project queue state changes.
-2. Capture fresh screenshots after visual changes.
-3. Extract repeated controls into a small component library once patterns stabilize.
-4. Add optional import/export schema validation for safer JSON handoff.
-5. Add deployment notes for static hosting.
+1. Capture fresh screenshots after visual changes.
+2. Extract repeated controls into a small component library once patterns stabilize.
+3. Add optional import/export schema validation for safer JSON handoff.
+4. Let users rename or delete individual signals and tasks.
