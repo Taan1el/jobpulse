@@ -17,7 +17,7 @@ describe('SignalDesk', () => {
     render(<App />)
 
     expect(screen.getByRole('heading', { name: 'SignalDesk' })).toBeInTheDocument()
-    expect(screen.getByText('Northwind Labs')).toBeInTheDocument()
+    expect(screen.getByText('Operations Tracker')).toBeInTheDocument()
     expect(
       screen.getByText('Full-stack dashboard profile'),
     ).toBeInTheDocument()

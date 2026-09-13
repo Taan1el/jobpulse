@@ -138,7 +138,7 @@ export const initialState: SignalDeskState = {
 export const referenceProfiles: ReferenceProfile[] = [
   {
     id: 1,
-    company: 'Northwind Labs',
+    company: 'Operations Tracker',
     role: 'Full-stack dashboard profile',
     fit: 'Best match',
     requirements: [
@@ -154,7 +154,7 @@ export const referenceProfiles: ReferenceProfile[] = [
   },
   {
     id: 2,
-    company: 'Fabrikam',
+    company: 'Frontend Console',
     role: 'Client-side workflow profile',
     fit: 'Good match',
     requirements: [
@@ -169,7 +169,7 @@ export const referenceProfiles: ReferenceProfile[] = [
   },
   {
     id: 3,
-    company: 'Contoso Digital',
+    company: 'Component Studio',
     role: 'Reusable interface profile',
     fit: 'Stretch',
     requirements: [
@@ -185,7 +185,7 @@ export const referenceProfiles: ReferenceProfile[] = [
   },
   {
     id: 4,
-    company: 'Tailspin Commerce',
+    company: 'SaaS Metrics Lab',
     role: 'Product analytics profile',
     fit: 'Stretch',
     requirements: [
