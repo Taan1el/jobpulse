@@ -23,4 +23,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - Header line height so the descender in "SignalDesk" no longer overlaps the subtitle.
-- Stale documentation screenshots that still showed the earlier job-search framing; regenerated against the current UI and copy.
+- Stale documentation screenshots, regenerated against the current UI and copy.
