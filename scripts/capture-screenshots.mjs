@@ -6,7 +6,17 @@ import { createServer } from 'vite'
 const outputDir = new URL('../docs/screenshots/', import.meta.url)
 await mkdir(outputDir, { recursive: true })
 
-const server = await createServer({ logLevel: 'error' })
+// Set SCREENSHOT_PORT to pin the throwaway dev server to a specific port
+// (useful when the default 5173 is taken by another project). Leaving it
+// unset keeps the normal Vite behavior of picking the next free port.
+const screenshotPort = process.env.SCREENSHOT_PORT
+  ? Number(process.env.SCREENSHOT_PORT)
+  : undefined
+
+const server = await createServer({
+  logLevel: 'error',
+  server: screenshotPort ? { port: screenshotPort, strictPort: true } : undefined,
+})
 await server.listen()
 
 // Vite moves to the next free port when 5173 is taken, so use the URL it
