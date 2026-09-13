@@ -81,8 +81,8 @@ p {
 h1 {
   color: #15202b;
   font-size: clamp(3rem, 9vw, 6.8rem);
-  line-height: 0.88;
-  margin-bottom: 8px;
+  line-height: 1;
+  margin-bottom: 12px;
 }
 
 .subtitle {
