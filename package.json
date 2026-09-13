@@ -1,8 +1,21 @@
 {
   "name": "signaldesk",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "A browser-based dashboard for tracking recurring technical signals and turning them into a queue of projects to build.",
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Taan1el/jobpulse.git"
+  },
+  "homepage": "https://taan1el.github.io/jobpulse/",
+  "bugs": {
+    "url": "https://github.com/Taan1el/jobpulse/issues"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

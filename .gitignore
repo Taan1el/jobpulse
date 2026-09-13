@@ -13,11 +13,22 @@ dist-server
 dist-ssr
 *.local
 
+# Test and tooling output
+coverage
+playwright-report
+test-results
+
+# Env files (keep the example committed)
+.env
+.env.*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
