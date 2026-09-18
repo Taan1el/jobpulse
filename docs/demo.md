@@ -2,36 +2,51 @@
 
 A short tour of the app.
 
-## 1. Header and Focus Strip
+## 1. Header and Totals
 
-The summary counts tracked skills, total signal mentions, and closed tasks. Below it, the focus strip shows the skill with the most mentions and the next unfinished task.
+The header names the product and its purpose in one sentence. Below it, a stats
+strip counts tracked skills, total signal mentions, and closed tasks.
 
-## 2. Reference Profiles
+## 2. Technical Signals
 
-Four sample product profiles list their technical needs. The fit label and note on each card show how well the tracked skills support that profile.
+- Filter by category with the segmented control, search skills and evidence,
+  or sort by mentions or name. The count above the table updates as the
+  filters change.
+- The table lists the strongest signal first by default. Click a skill name to
+  select it; its full record appears in the side column.
+- Add a mention with the row's button. The total in the stats strip updates
+  and the change is saved to `localStorage`.
 
-## 3. Connection States
+## 3. Reference Fit
 
-Pick Ready, Loading, Empty, or Error to see how the dashboard presents a remote source in each state. The Loading view shows a skeleton. These are sample states; nothing is fetched.
+Four sample product profiles list their technical needs as a dense list, not
+cards. The fit label and note on each row show how well the tracked skills
+support that profile.
 
-## 4. Requirement Signals
+## 4. Connection States
 
-- Filter by category, search skills and evidence, or sort by mentions or name. The count above the list updates as the filters change.
-- Add a mention on any card. The total in the header updates and the change is saved in `localStorage`.
+Pick Ready, Loading, Empty, or Error to see how the dashboard presents a
+remote source in each state. The Loading view shows a skeleton. These are
+sample states; nothing is fetched.
 
-## 5. Build Queue
+## 5. Selected Signal and Build Queue
 
-Each task shows its status and a button for the next step: Start, Complete, or Reopen.
+The side column shows the selected signal's evidence and project angle, and
+the build queue below it. Each task shows its status and a button for the
+next step: Start, Complete, or Reopen.
 
 ## 6. Import, Export, and Reset
 
-- **Import sample batch** merges three sample requirements once. Importing again is blocked until the demo data is reset.
+- **Import sample batch** merges three sample requirements once. Importing
+  again is blocked until the demo data is reset.
 - **Export JSON** downloads the current signals and tasks.
-- **Reset to defaults** restores the sample data.
+- **Reset sample data**, in the demo bar at the top, restores the sample data
+  after a confirmation prompt.
 
 ## 7. Add a Signal
 
-Submit the form empty, or with a skill that is already tracked, to see the inline errors. Focus moves to the first field that needs attention.
+Submit the form empty, or with a skill that is already tracked, to see the
+inline errors. Focus moves to the first field that needs attention.
 
 ## Screenshots
 

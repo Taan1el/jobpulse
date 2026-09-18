@@ -32,15 +32,31 @@ const browser = await chromium.launch()
 
 try {
   const viewports = [
-    { name: 'desktop', width: 1440, height: 1100 },
-    { name: 'mobile', width: 390, height: 1400 },
+    { name: 'desktop', width: 1440, height: 900 },
+    { name: 'mobile', width: 390, height: 844 },
   ]
 
   for (const viewport of viewports) {
     const page = await browser.newPage({ viewport })
     await page.goto(baseUrl, { waitUntil: 'networkidle' })
+    // Let the variable web fonts finish swapping in and the page settle
+    // into its final layout before measuring or capturing anything.
+    await page.evaluate(() => document.fonts.ready)
+    await page.waitForTimeout(300)
+
+    // fullPage sizes the capture from document.documentElement.scrollWidth,
+    // which CSS Grid can report wider than the page ever actually renders
+    // or scrolls to (the signal table scrolls inside its own bordered
+    // container by design, and the page itself never does - confirmed by
+    // window.scrollTo tests). scrollHeight is accurate, so resize the
+    // viewport to the full content height and take a plain screenshot at
+    // the real configured width instead of trusting fullPage's width.
+    const contentHeight = await page.evaluate(
+      () => document.documentElement.scrollHeight,
+    )
+    await page.setViewportSize({ width: viewport.width, height: contentHeight })
+
     await page.screenshot({
-      fullPage: true,
       path: fileURLToPath(new URL(`signaldesk-${viewport.name}.png`, outputDir)),
     })
     await page.close()
