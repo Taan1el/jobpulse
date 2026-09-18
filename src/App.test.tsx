@@ -13,7 +13,7 @@ describe('SignalDesk', () => {
     vi.restoreAllMocks()
   })
 
-  it('shows reference profiles and the next project step', () => {
+  it('shows reference profiles and the build queue', () => {
     render(<App />)
 
     expect(screen.getByRole('heading', { name: 'SignalDesk' })).toBeInTheDocument()
@@ -21,7 +21,7 @@ describe('SignalDesk', () => {
     expect(
       screen.getByText('Full-stack dashboard profile'),
     ).toBeInTheDocument()
-    expect(screen.getAllByText('Write component tests')).toHaveLength(2)
+    expect(screen.getByText('Write component tests')).toBeInTheDocument()
   })
 
   it('filters requirement signals by category', async () => {
@@ -223,27 +223,30 @@ describe('SignalDesk', () => {
     const sortSelect = screen.getByLabelText('Sort by')
     await user.selectOptions(sortSelect, 'alphabetical')
 
-    const signalHeaders = within(screen.getByLabelText('Filtered requirement signals'))
-      .getAllByRole('heading', { level: 3 })
-      .map((h) => h.textContent)
+    const table = screen.getByLabelText('Filtered requirement signals')
+    const skillButtons = within(table).getAllByRole('button', {
+      name: (accessibleName) => !accessibleName.startsWith('Add mention'),
+    })
 
-    expect(signalHeaders[0]).toBe('Component systems')
+    expect(skillButtons[0]).toHaveTextContent('Component systems')
   })
 
   it('resets demo data back to default baseline', async () => {
     const user = userEvent.setup()
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
 
     render(<App />)
 
-    // Add mention to change state
+    // Add mention to change state; React + TypeScript is the strongest
+    // signal, so it starts selected in the side detail panel.
     const addMentionBtn = screen.getByRole('button', {
       name: 'Add mention for React + TypeScript',
     })
     await user.click(addMentionBtn)
     expect(screen.getByText('10 mentions')).toBeInTheDocument()
 
-    // Click reset
-    await user.click(screen.getByRole('button', { name: 'Reset to defaults' }))
+    // Click reset in the demo bar
+    await user.click(screen.getByRole('button', { name: 'Reset sample data' }))
 
     // Baseline mentions for React + TypeScript is 9
     expect(screen.getByText('9 mentions')).toBeInTheDocument()
