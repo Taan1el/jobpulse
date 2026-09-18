@@ -13,7 +13,6 @@ export function IntegrationStates({
 }: IntegrationStatesProps) {
   return (
     <section aria-labelledby="integration-heading">
-      <p className="label">Data source</p>
       <h2 className="section-heading" id="integration-heading">
         Connection states
       </h2>

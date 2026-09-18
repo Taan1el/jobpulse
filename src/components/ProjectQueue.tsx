@@ -15,7 +15,6 @@ const actionLabels: Record<ProjectTask['status'], string> = {
 export function ProjectQueue({ tasks, onAdvanceTask }: ProjectQueueProps) {
   return (
     <section aria-labelledby="queue-heading">
-      <p className="label">Project queue</p>
       <h3 className="panel-heading" id="queue-heading">
         Build order
       </h3>

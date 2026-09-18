@@ -99,7 +99,6 @@ export function SignalForm({ categories, existingSkills, onAdd }: SignalFormProp
       onSubmit={handleSubmit}
     >
       <div>
-        <p className="label">Add signal</p>
         <h3 className="panel-heading" id="form-heading">
           New requirement
         </h3>

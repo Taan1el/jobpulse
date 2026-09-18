@@ -11,7 +11,6 @@ type ExportPanelProps = {
 export function ImportPanel({ requirementCount, imported, onImport }: ImportPanelProps) {
   return (
     <section aria-labelledby="import-heading" className="data-action">
-      <p className="label">Sample import</p>
       <h3 className="panel-heading" id="import-heading">
         Signal batch
       </h3>
@@ -30,7 +29,6 @@ export function ImportPanel({ requirementCount, imported, onImport }: ImportPane
 export function ExportPanel({ onExport }: ExportPanelProps) {
   return (
     <section aria-labelledby="export-heading" className="data-action">
-      <p className="label">Data handoff</p>
       <h3 className="panel-heading" id="export-heading">
         Export snapshot
       </h3>
