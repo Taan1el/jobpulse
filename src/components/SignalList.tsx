@@ -1,4 +1,5 @@
 import type { SignalCategory, SignalSortOption, WorkSignal } from '../../shared/signaldesk'
+import { pluralize } from '../utils/pluralize'
 
 type SignalListProps = {
   activeCategory: 'All' | SignalCategory
@@ -7,10 +8,12 @@ type SignalListProps = {
   totalCount: number
   searchQuery: string
   sortOption: SignalSortOption
+  selectedSignalId?: number
   onCategoryChange: (category: 'All' | SignalCategory) => void
   onSearchChange: (query: string) => void
   onSortChange: (sort: SignalSortOption) => void
   onIncreaseMention: (signalId: number) => void
+  onSelectSignal: (signalId: number) => void
 }
 
 export function SignalList({
@@ -20,19 +23,23 @@ export function SignalList({
   totalCount,
   searchQuery,
   sortOption,
+  selectedSignalId,
   onCategoryChange,
   onSearchChange,
   onSortChange,
   onIncreaseMention,
+  onSelectSignal,
 }: SignalListProps) {
   return (
-    <section className="signal-panel" aria-labelledby="signals-heading">
-      <div className="section-heading">
+    <section aria-labelledby="signals-heading">
+      <div className="section-heading-row">
         <div>
           <p className="label">Requirements</p>
-          <h2 id="signals-heading">Technical signals</h2>
+          <h2 className="section-heading" id="signals-heading">
+            Technical signals
+          </h2>
         </div>
-        <fieldset className="tabs">
+        <fieldset className="segmented">
           <legend className="visually-hidden">Filter by category</legend>
           {categories.map((category) => (
             <button
@@ -63,9 +70,7 @@ export function SignalList({
           <label htmlFor="signal-sort">Sort by</label>
           <select
             id="signal-sort"
-            onChange={(event) =>
-              onSortChange(event.target.value as SignalSortOption)
-            }
+            onChange={(event) => onSortChange(event.target.value as SignalSortOption)}
             value={sortOption}
           >
             <option value="mentions">Most mentions</option>
@@ -75,8 +80,7 @@ export function SignalList({
       </div>
 
       <output aria-live="polite" className="result-count" htmlFor="signal-search">
-        Showing {signals.length} of {totalCount}{' '}
-        {totalCount === 1 ? 'signal' : 'signals'}
+        Showing {signals.length} of {totalCount} {pluralize(totalCount, 'signal')}
       </output>
 
       {signals.length === 0 ? (
@@ -87,32 +91,53 @@ export function SignalList({
           </p>
         </div>
       ) : (
-        <ul className="signal-list" aria-label="Filtered requirement signals">
-          {signals.map((signal) => (
-            <li key={signal.id}>
-              <article className="signal-card">
-                <div>
-                  <span className="category">{signal.category}</span>
-                  <h3>{signal.skill}</h3>
-                </div>
-                <p>{signal.evidence}</p>
-                <p className="project-angle">{signal.projectAngle}</p>
-                <div className="card-actions">
-                  <span>
-                    {signal.mentions} {signal.mentions === 1 ? 'mention' : 'mentions'}
-                  </span>
-                  <button
-                    aria-label={`Add mention for ${signal.skill}`}
-                    onClick={() => onIncreaseMention(signal.id)}
-                    type="button"
-                  >
-                    Add mention
-                  </button>
-                </div>
-              </article>
-            </li>
-          ))}
-        </ul>
+        <div className="table-wrapper">
+          <table aria-label="Filtered requirement signals" className="signal-table">
+            <thead>
+              <tr>
+                <th>Skill</th>
+                <th>Category</th>
+                <th>Mentions</th>
+                <th>
+                  <span className="visually-hidden">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {signals.map((signal) => (
+                <tr className={signal.id === selectedSignalId ? 'selected' : ''} key={signal.id}>
+                  <td>
+                    <div className="skill-cell">
+                      <button
+                        aria-label={signal.skill}
+                        aria-pressed={signal.id === selectedSignalId}
+                        onClick={() => onSelectSignal(signal.id)}
+                        type="button"
+                      >
+                        {signal.skill}
+                      </button>
+                      <span className="skill-evidence">{signal.evidence}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span className="category-badge">{signal.category}</span>
+                  </td>
+                  <td className="mentions-cell">{signal.mentions}</td>
+                  <td>
+                    <button
+                      aria-label={`Add mention for ${signal.skill}`}
+                      className="mention-btn"
+                      onClick={() => onIncreaseMention(signal.id)}
+                      type="button"
+                    >
+                      Add mention
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </section>
   )

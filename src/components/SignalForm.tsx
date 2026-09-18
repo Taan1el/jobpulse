@@ -39,7 +39,7 @@ function validate(values: NewSignal, existingSkills: string[]): FieldErrors {
   }
 
   if (!values.projectAngle.trim()) {
-    errors.projectAngle = 'Describe how a project could show it.'
+    errors.projectAngle = 'Describe how a project could use it.'
   }
 
   return errors
@@ -100,7 +100,9 @@ export function SignalForm({ categories, existingSkills, onAdd }: SignalFormProp
     >
       <div>
         <p className="label">Add signal</p>
-        <h2 id="form-heading">New requirement</h2>
+        <h3 className="panel-heading" id="form-heading">
+          New requirement
+        </h3>
       </div>
 
       <div className="form-group">
@@ -169,14 +171,14 @@ export function SignalForm({ categories, existingSkills, onAdd }: SignalFormProp
             const projectAngle = event.target.value
             setValues((current) => ({ ...current, projectAngle }))
           }}
-          placeholder="A project that would show this skill"
+          placeholder="A project that would use this skill"
           required
           value={values.projectAngle}
         />
         <FieldError id="signal-angle-error" message={errors.projectAngle} />
       </div>
 
-      <button className="primary-action" type="submit">
+      <button className="btn btn-primary" type="submit">
         Save signal
       </button>
     </form>

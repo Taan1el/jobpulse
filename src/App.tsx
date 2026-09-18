@@ -8,13 +8,14 @@ import {
   type SignalSortOption,
 } from '../shared/signaldesk'
 import {
+  DemoBanner,
   ExportPanel,
-  FocusStrip,
+  Header,
   ImportPanel,
   IntegrationStates,
-  ReferenceMatrix,
   ProjectQueue,
-  ResetDataPanel,
+  ReferenceMatrix,
+  SignalDetail,
   SignalForm,
   SignalList,
   SummaryGrid,
@@ -54,6 +55,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortOption, setSortOption] = useState<SignalSortOption>('mentions')
   const [activeScenarioId, setActiveScenarioId] = useState(1)
+  const [selectedSignalId, setSelectedSignalId] = useState<number>()
   const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null)
 
   useEffect(() => {
@@ -111,12 +113,14 @@ function App() {
     [state.signals],
   )
 
+  const selectedSignal =
+    state.signals.find((signal) => signal.id === selectedSignalId) ?? topSignal
+
   const totalMentions = state.signals.reduce(
     (total, signal) => total + signal.mentions,
     0,
   )
   const closedTaskCount = state.tasks.filter((task) => task.status === 'Done').length
-  const nextTask = state.tasks.find((task) => task.status !== 'Done')
   const trackedSkills = state.signals.map((signal) => signal.skill)
   const sampleBatchImported = state.importedBatchIds.includes(sampleSignalBatch.id)
   const activeScenario =
@@ -181,64 +185,57 @@ function App() {
     setSearchQuery('')
     setActiveCategory('All')
     setSortOption('mentions')
+    setSelectedSignalId(undefined)
     showToast('Reset all signals and queue to default demo state')
   }
 
   return (
     <div className="app-shell">
-      <header className="workspace-header">
-        <div>
-          <div className="header-meta">
-            <span className="eyebrow">Technical signal planner</span>
-            <span className="location-badge">Project planning</span>
-          </div>
-          <h1>SignalDesk</h1>
-          <p className="subtitle">
-            Track recurring technical signals and plan what to build next.
-          </p>
-          <div className="meta-pills">
-            <span className="storage-status">Saved in this browser</span>
-          </div>
-        </div>
+      <DemoBanner onReset={resetDemoData} />
+      <Header />
+
+      <main className="app-main">
         <SummaryGrid
           closedTaskCount={closedTaskCount}
           signalCount={state.signals.length}
           totalMentions={totalMentions}
         />
-      </header>
-
-      <main>
-        <FocusStrip nextTask={nextTask} topSignal={topSignal} />
-        <ReferenceMatrix profiles={referenceProfiles} />
-        <IntegrationStates
-          activeScenario={activeScenario}
-          onScenarioChange={setActiveScenarioId}
-          scenarios={integrationScenarios}
-        />
 
         <div className="content-grid">
-          <SignalList
-            activeCategory={activeCategory}
-            categories={categories}
-            onCategoryChange={setActiveCategory}
-            onIncreaseMention={increaseMention}
-            onSearchChange={setSearchQuery}
-            onSortChange={setSortOption}
-            searchQuery={searchQuery}
-            signals={filteredSignals}
-            sortOption={sortOption}
-            totalCount={state.signals.length}
-          />
-
-          <aside className="side-panel">
-            <ProjectQueue onAdvanceTask={advanceTask} tasks={state.tasks} />
-            <ImportPanel
-              imported={sampleBatchImported}
-              onImport={importSampleBatch}
-              requirementCount={sampleSignalBatch.requirements.length}
+          <div className="main-column">
+            <SignalList
+              activeCategory={activeCategory}
+              categories={categories}
+              onCategoryChange={setActiveCategory}
+              onIncreaseMention={increaseMention}
+              onSearchChange={setSearchQuery}
+              onSelectSignal={setSelectedSignalId}
+              onSortChange={setSortOption}
+              searchQuery={searchQuery}
+              selectedSignalId={selectedSignal?.id}
+              signals={filteredSignals}
+              sortOption={sortOption}
+              totalCount={state.signals.length}
             />
-            <ExportPanel onExport={exportSignals} />
-            <ResetDataPanel onReset={resetDemoData} />
+            <ReferenceMatrix profiles={referenceProfiles} />
+            <IntegrationStates
+              activeScenario={activeScenario}
+              onScenarioChange={setActiveScenarioId}
+              scenarios={integrationScenarios}
+            />
+          </div>
+
+          <aside className="side-column">
+            <SignalDetail signal={selectedSignal} />
+            <ProjectQueue onAdvanceTask={advanceTask} tasks={state.tasks} />
+            <div className="data-actions">
+              <ImportPanel
+                imported={sampleBatchImported}
+                onImport={importSampleBatch}
+                requirementCount={sampleSignalBatch.requirements.length}
+              />
+              <ExportPanel onExport={exportSignals} />
+            </div>
             <SignalForm
               categories={signalCategories}
               existingSkills={trackedSkills}

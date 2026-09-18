@@ -14,29 +14,27 @@ const actionLabels: Record<ProjectTask['status'], string> = {
 
 export function ProjectQueue({ tasks, onAdvanceTask }: ProjectQueueProps) {
   return (
-    <section className="queue-section" aria-labelledby="queue-heading">
-      <div className="section-heading compact">
-        <div>
-          <p className="label">Project queue</p>
-          <h2 id="queue-heading">Build order</h2>
-        </div>
-      </div>
-      <ol className="task-list">
+    <section aria-labelledby="queue-heading">
+      <p className="label">Project queue</p>
+      <h3 className="panel-heading" id="queue-heading">
+        Build order
+      </h3>
+      <ol className="queue-list">
         {tasks.map((task) => {
           const statusClass = task.status.toLowerCase().replace(' ', '-')
           const actionLabel = actionLabels[task.status]
 
           return (
             <li key={task.id}>
-              <article className={`task-card status-${statusClass}`}>
-                <div>
-                  <span className={`task-badge ${statusClass}`}>{task.status}</span>
+              <article className={`queue-item status-${statusClass}`}>
+                <div className="queue-item-body">
+                  <span className={`task-badge status-${statusClass}`}>{task.status}</span>
                   <h3>{task.title}</h3>
                   <p>{task.requirement}</p>
                 </div>
                 <button
                   aria-label={`${actionLabel}: ${task.title}`}
-                  className="task-action-btn"
+                  className="queue-action-btn"
                   onClick={() => onAdvanceTask(task.id)}
                   type="button"
                 >

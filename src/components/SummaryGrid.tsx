@@ -10,19 +10,19 @@ export function SummaryGrid({
   closedTaskCount,
 }: SummaryGridProps) {
   const metrics = [
-    { label: 'tracked skills', value: signalCount },
-    { label: 'signal mentions', value: totalMentions },
-    { label: 'tasks closed', value: closedTaskCount },
+    { label: 'Tracked skills', value: signalCount },
+    { label: 'Signal mentions', value: totalMentions },
+    { label: 'Tasks closed', value: closedTaskCount },
   ]
 
   return (
-    <dl className="summary-grid">
+    <div className="stats-strip">
       {metrics.map((metric) => (
-        <div key={metric.label}>
-          <dt>{metric.label}</dt>
-          <dd>{metric.value}</dd>
+        <div className="stat-cell" key={metric.label}>
+          <span className="stat-label">{metric.label}</span>
+          <span className="stat-value">{metric.value}</span>
         </div>
       ))}
-    </dl>
+    </div>
   )
 }

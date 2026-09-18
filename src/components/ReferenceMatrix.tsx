@@ -6,44 +6,36 @@ type ReferenceMatrixProps = {
 
 export function ReferenceMatrix({ profiles }: ReferenceMatrixProps) {
   return (
-    <section className="fit-section" aria-labelledby="reference-heading">
-      <div className="section-heading">
-        <div>
-          <p className="label">Reference fit</p>
-          <h2 id="reference-heading">Project profiles</h2>
-        </div>
-        <p>
-          Sample product profiles, rated by how well the tracked skills cover
-          their technical needs.
-        </p>
-      </div>
-      <div className="reference-grid">
+    <section aria-labelledby="reference-heading">
+      <p className="label">Reference fit</p>
+      <h2 className="section-heading" id="reference-heading">
+        Project profiles
+      </h2>
+      <p className="section-description">
+        Sample product profiles, rated by how well the tracked skills cover their
+        technical needs.
+      </p>
+      <div className="reference-list">
         {profiles.map((profile) => (
           <article
             aria-label={`${profile.company}: ${profile.role}`}
-            className="reference-card"
+            className="reference-row"
             key={profile.id}
           >
-            <div className="reference-title">
-              <div>
-                <span
-                  className={`fit-pill ${profile.fit.toLowerCase().replace(' ', '-')}`}
-                >
-                  {profile.fit}
-                </span>
-                <h3>{profile.company}</h3>
-                <p>{profile.role}</p>
-              </div>
+            <span className="fit-badge">{profile.fit}</span>
+            <div>
+              <h3>{profile.company}</h3>
+              <p className="reference-role">{profile.role}</p>
+              <ul
+                aria-label={`${profile.company} technical needs`}
+                className="requirement-tags"
+              >
+                {profile.requirements.map((requirement) => (
+                  <li key={requirement}>{requirement}</li>
+                ))}
+              </ul>
+              <p className="reference-note">{profile.projectMove}</p>
             </div>
-            <ul
-              aria-label={`${profile.company} technical needs`}
-              className="requirement-tags"
-            >
-              {profile.requirements.map((requirement) => (
-                <li key={requirement}>{requirement}</li>
-              ))}
-            </ul>
-            <p className="project-angle">{profile.projectMove}</p>
           </article>
         ))}
       </div>
