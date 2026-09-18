@@ -1,3 +1,4 @@
+import { Plus } from 'lucide-react'
 import type { SignalCategory, SignalSortOption, WorkSignal } from '../../shared/signaldesk'
 import { pluralize } from '../utils/pluralize'
 
@@ -34,7 +35,6 @@ export function SignalList({
     <section aria-labelledby="signals-heading">
       <div className="section-heading-row">
         <div>
-          <p className="label">Requirements</p>
           <h2 className="section-heading" id="signals-heading">
             Technical signals
           </h2>
@@ -107,17 +107,15 @@ export function SignalList({
               {signals.map((signal) => (
                 <tr className={signal.id === selectedSignalId ? 'selected' : ''} key={signal.id}>
                   <td>
-                    <div className="skill-cell">
-                      <button
-                        aria-label={signal.skill}
-                        aria-pressed={signal.id === selectedSignalId}
-                        onClick={() => onSelectSignal(signal.id)}
-                        type="button"
-                      >
-                        {signal.skill}
-                      </button>
-                      <span className="skill-evidence">{signal.evidence}</span>
-                    </div>
+                    <button
+                      aria-label={signal.skill}
+                      aria-pressed={signal.id === selectedSignalId}
+                      className="skill-btn"
+                      onClick={() => onSelectSignal(signal.id)}
+                      type="button"
+                    >
+                      {signal.skill}
+                    </button>
                   </td>
                   <td>
                     <span className="category-badge">{signal.category}</span>
@@ -126,11 +124,12 @@ export function SignalList({
                   <td>
                     <button
                       aria-label={`Add mention for ${signal.skill}`}
-                      className="mention-btn"
+                      className="icon-btn"
                       onClick={() => onIncreaseMention(signal.id)}
+                      title="Add mention"
                       type="button"
                     >
-                      Add mention
+                      <Plus aria-hidden="true" size={16} strokeWidth={1.75} />
                     </button>
                   </td>
                 </tr>

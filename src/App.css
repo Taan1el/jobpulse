@@ -301,7 +301,7 @@ table.signal-table {
 }
 
 .signal-table td {
-  padding: 0.6rem 1rem;
+  padding: 0.4rem 1rem;
   border-bottom: 1px solid var(--rule);
   vertical-align: middle;
 }
@@ -314,13 +314,20 @@ table.signal-table {
   background-color: var(--accent-soft);
 }
 
-.skill-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+/* The skill column is the only one that grows; the rest size to their
+   content so the row (and its action button) always fits at desktop
+   width without clipping. */
+.signal-table th:nth-child(2),
+.signal-table td:nth-child(2),
+.signal-table th:nth-child(3),
+.signal-table td:nth-child(3),
+.signal-table th:nth-child(4),
+.signal-table td:nth-child(4) {
+  width: 1px;
+  white-space: nowrap;
 }
 
-.skill-cell button {
+.skill-btn {
   background: none;
   border: none;
   padding: 0;
@@ -333,17 +340,8 @@ table.signal-table {
   cursor: pointer;
 }
 
-.skill-cell button:hover {
+.skill-btn:hover {
   color: var(--accent);
-}
-
-.skill-evidence {
-  font-size: 12px;
-  color: var(--ink-3);
-  max-width: 42ch;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .category-badge {
@@ -363,24 +361,21 @@ table.signal-table {
   white-space: nowrap;
 }
 
-.mention-btn {
+.icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  min-height: 44px;
-  padding: 0 0.9rem;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--rule-strong);
   border-radius: var(--radius);
   background-color: var(--surface);
   color: var(--ink-2);
-  font-size: 13px;
   cursor: pointer;
-  white-space: nowrap;
   transition: border-color 120ms ease, color 120ms ease;
 }
 
-.mention-btn:hover {
+.icon-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
@@ -826,10 +821,6 @@ table.signal-table {
 
   .sort-field {
     flex: 1 1 auto;
-  }
-
-  .skill-evidence {
-    max-width: 32ch;
   }
 
   .reference-row {
