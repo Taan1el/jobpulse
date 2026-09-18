@@ -6,6 +6,8 @@
 
 SignalDesk is a technical signal planner. It tracks recurring skills and architecture themes, rates how well those themes support reference product profiles, and turns the gaps into a queue of projects to build. Everything runs in the browser and is saved to `localStorage`.
 
+The interface is a dense signal table with the strongest signal first, a compact segmented control for filtering and connection-state switching, and a side column with the selected signal's detail and the build queue.
+
 **Live demo:** [taan1el.github.io/jobpulse](https://taan1el.github.io/jobpulse/). The demo runs entirely in your browser: there is no backend, and your data stays on your device.
 
 ![SignalDesk dashboard at 1440px wide](docs/screenshots/signaldesk-desktop.png)
@@ -14,13 +16,14 @@ A short walkthrough of each part of the app is in [docs/demo.md](docs/demo.md).
 
 ## Features
 
-- **Requirement signals**: filter by category, search skills and evidence, sort by mentions or name, and add a mention when a skill shows up again.
+- **Requirement signals**: a dense table, filter by category, search skills and evidence, sort by mentions or name, and add a mention when a skill shows up again.
+- **Selected signal detail**: click a skill to see its full evidence and project angle in the side column.
 - **Reference profiles**: sample product profiles with their technical needs, a fit rating, and a note on what is missing.
-- **Build queue**: tasks move from Next to In progress to Done and can be reopened. The header counts closed tasks.
+- **Build queue**: tasks move from Next to In progress to Done and can be reopened. The stats strip counts closed tasks.
 - **Sample batch import**: merges three sample requirements once. Skills that are already tracked get one more mention and keep the text you wrote.
 - **Add signal form**: inline validation for empty fields and for skills that are already tracked.
 - **Connection states**: Ready, Loading, Empty, and Error views for a remote source. These are sample states; the app makes no network requests.
-- **Export and reset**: download the current signals and tasks as JSON, or restore the sample data.
+- **Export and reset**: download the current signals and tasks as JSON, or restore the sample data from the demo bar.
 
 ## Getting started
 
@@ -70,6 +73,8 @@ shared/signaldesk.ts       Domain types and sample data
 src/App.tsx                Page layout, derived values, and event handlers
 src/components/            Presentational components and the signal form
 src/state/                 Reducer, storage, and their unit tests
+src/utils/pluralize.ts     Singular/plural count formatting, with its own test
+src/styles/tokens.css      Design tokens (color, type, radius)
 src/App.test.tsx           Behavior tests through the UI
 src/App.a11y.test.tsx      axe checks for the main screen states
 scripts/                   Screenshot capture
@@ -84,7 +89,7 @@ Vitest and React Testing Library cover user-facing behavior: filtering, search, 
 npm test
 ```
 
-37 tests across 4 files as of this release. Run `npm run lint` for static checks (oxlint, including jsx-a11y rules).
+41 tests across 5 files as of this release. Run `npm run lint` for static checks (oxlint, including jsx-a11y rules).
 
 ## Deployment
 

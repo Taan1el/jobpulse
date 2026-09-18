@@ -4,6 +4,17 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- Redesigned the interface around the shared product design tokens: Sora, Geist, and Geist Mono replace Inter, the header wordmark drops from a 108px hero to 40px, and every gradient and shadow except the focus ring is gone.
+- Rebuilt the technical signals list as a dense table with the strongest signal first, replacing the repeated card grids. Category filtering and connection-state switching are now compact 44px segmented controls.
+- Added a selected-signal detail panel and moved the build queue into a single side column, next to the signal table.
+- Turned the reference profiles into a dense list instead of a card grid, and combined the import and export panels into one data-actions panel.
+- Added a slim demo bar with the reset action and a link to the source, replacing the separate reset panel.
+- Raised every control to at least 44px tall and confirmed the layout holds to one column with no horizontal page scroll under 720px.
+
 ## [1.0.0] - 2026-09-13
 
 ### Added
