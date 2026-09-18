@@ -222,7 +222,7 @@ export const integrationScenarios: IntegrationScenario[] = [
     title: 'No matching signals',
     description:
       'Nothing matched the current filters, so the panel suggests what to change.',
-    sample: 'Try broadening the location filter or lowering the seniority match.',
+    sample: 'Try widening the category filter or lowering the mention threshold.',
   },
   {
     id: 4,
