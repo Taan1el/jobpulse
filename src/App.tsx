@@ -120,6 +120,7 @@ function App() {
     (total, signal) => total + signal.mentions,
     0,
   )
+  const maxMentions = Math.max(1, ...state.signals.map((signal) => signal.mentions))
   const closedTaskCount = state.tasks.filter((task) => task.status === 'Done').length
   const trackedSkills = state.signals.map((signal) => signal.skill)
   const sampleBatchImported = state.importedBatchIds.includes(sampleSignalBatch.id)
@@ -192,15 +193,16 @@ function App() {
   return (
     <div className="app-shell">
       <DemoBanner onReset={resetDemoData} />
-      <Header />
-
-      <main className="app-main">
+      <div className="masthead">
+        <Header />
         <SummaryGrid
           closedTaskCount={closedTaskCount}
           signalCount={state.signals.length}
           totalMentions={totalMentions}
         />
+      </div>
 
+      <main className="app-main">
         <div className="content-grid">
           <div className="main-column">
             <SignalList
@@ -215,6 +217,7 @@ function App() {
               selectedSignalId={selectedSignal?.id}
               signals={filteredSignals}
               sortOption={sortOption}
+              maxMentions={maxMentions}
               totalCount={state.signals.length}
             />
             <ReferenceMatrix profiles={referenceProfiles} />

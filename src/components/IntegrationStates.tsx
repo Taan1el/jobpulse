@@ -13,14 +13,14 @@ export function IntegrationStates({
 }: IntegrationStatesProps) {
   return (
     <section aria-labelledby="integration-heading">
-      <h2 className="section-heading" id="integration-heading">
+      <h2 className="section-title" id="integration-heading">
         Connection states
       </h2>
       <p className="section-description">
         How the dashboard presents a remote source while it loads, when nothing
         matches, and when it fails. These are sample states; nothing is fetched.
       </p>
-      <fieldset className="segmented">
+      <fieldset className="tabs">
         <legend className="visually-hidden">Choose a connection state</legend>
         {scenarios.map((scenario) => (
           <button

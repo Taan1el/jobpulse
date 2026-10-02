@@ -1,3 +1,5 @@
+import { pluralize } from '../utils/pluralize'
+
 type SummaryGridProps = {
   signalCount: number
   totalMentions: number
@@ -10,19 +12,19 @@ export function SummaryGrid({
   closedTaskCount,
 }: SummaryGridProps) {
   const metrics = [
-    { label: 'Tracked skills', value: signalCount },
-    { label: 'Signal mentions', value: totalMentions },
-    { label: 'Tasks closed', value: closedTaskCount },
+    { label: pluralize(signalCount, 'tracked skill'), value: signalCount },
+    { label: pluralize(totalMentions, 'signal mention'), value: totalMentions },
+    { label: pluralize(closedTaskCount, 'task') + ' closed', value: closedTaskCount },
   ]
 
   return (
-    <div className="stats-strip">
+    <dl className="tally">
       {metrics.map((metric) => (
-        <div className="stat-cell" key={metric.label}>
-          <span className="stat-label">{metric.label}</span>
-          <span className="stat-value">{metric.value}</span>
+        <div className="tally-row" key={metric.label}>
+          <dt className="tally-label">{metric.label}</dt>
+          <dd className="tally-value">{metric.value}</dd>
         </div>
       ))}
-    </div>
+    </dl>
   )
 }

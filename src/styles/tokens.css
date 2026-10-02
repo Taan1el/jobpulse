@@ -1,20 +1,20 @@
 :root {
-  --paper: #faf9f6;        /* page background */
-  --surface: #ffffff;      /* panels, tables */
-  --ink: #17160f;          /* primary text */
-  --ink-2: #57544b;        /* secondary text */
-  --ink-3: #8a867b;        /* tertiary text, placeholders */
-  --rule: #e3e0d7;         /* borders and dividers */
-  --rule-strong: #cfcabd;  /* input borders, table header rule */
-  --accent: #9a3412;       /* jobpulse (SignalDesk): signal board */
+  --paper: #f2f0ed;        /* page background */
+  --surface: #ffffff;      /* inputs, selected row, demo bar */
+  --ink: #231815;          /* primary text, thick rules */
+  --ink-2: #554a44;        /* secondary text */
+  --ink-3: #6b5e57;        /* tertiary text, placeholders */
+  --rule: #d9d3cc;         /* hairline dividers */
+  --rule-strong: #8f847d;  /* input borders */
+  --accent: #9a3412;       /* SignalDesk: field-note rust */
   --accent-ink: #ffffff;   /* text on accent fills */
-  --accent-soft: color-mix(in srgb, var(--accent) 10%, var(--surface));
-  /* status colors are data, not decoration: use only for status text, dots, small badges and meter fills */
+  /* status colors encode status only: dots, text labels, thin rules */
   --ok: #1f7a4d;
-  --warn: #a15c00;
+  --warn: #955300;
   --bad: #b3261e;
-  --radius: 6px;
-  --font-heading: "Sora Variable", "Sora", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Geist Variable", "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, "SFMono-Regular", monospace;
+  --radius: 8px;           /* controls only; panels stay open */
+  --page-pad: clamp(16px, 4vw, 40px);
+  --font-heading: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "DM Sans Variable", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Red Hat Mono Variable", "Red Hat Mono", ui-monospace, "SFMono-Regular", monospace;
 }

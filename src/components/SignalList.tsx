@@ -7,6 +7,7 @@ type SignalListProps = {
   categories: Array<'All' | SignalCategory>
   signals: WorkSignal[]
   totalCount: number
+  maxMentions: number
   searchQuery: string
   sortOption: SignalSortOption
   selectedSignalId?: number
@@ -22,6 +23,7 @@ export function SignalList({
   categories,
   signals,
   totalCount,
+  maxMentions,
   searchQuery,
   sortOption,
   selectedSignalId,
@@ -33,13 +35,11 @@ export function SignalList({
 }: SignalListProps) {
   return (
     <section aria-labelledby="signals-heading">
-      <div className="section-heading-row">
-        <div>
-          <h2 className="section-heading" id="signals-heading">
-            Technical signals
-          </h2>
-        </div>
-        <fieldset className="segmented">
+      <h2 className="board-heading" id="signals-heading">
+        Technical signals
+      </h2>
+      <div className="board-bar">
+        <fieldset className="tabs">
           <legend className="visually-hidden">Filter by category</legend>
           {categories.map((category) => (
             <button
@@ -95,8 +95,9 @@ export function SignalList({
           <table aria-label="Filtered requirement signals" className="signal-table">
             <thead>
               <tr>
+                <th>Rank</th>
                 <th>Skill</th>
-                <th>Category</th>
+                <th>Share of top signal</th>
                 <th>Mentions</th>
                 <th>
                   <span className="visually-hidden">Actions</span>
@@ -104,9 +105,10 @@ export function SignalList({
               </tr>
             </thead>
             <tbody>
-              {signals.map((signal) => (
+              {signals.map((signal, index) => (
                 <tr className={signal.id === selectedSignalId ? 'selected' : ''} key={signal.id}>
-                  <td>
+                  <td className="rank-cell">{index + 1}</td>
+                  <td className="skill-cell">
                     <button
                       aria-label={signal.skill}
                       aria-pressed={signal.id === selectedSignalId}
@@ -116,12 +118,21 @@ export function SignalList({
                     >
                       {signal.skill}
                     </button>
-                  </td>
-                  <td>
                     <span className="category-badge">{signal.category}</span>
                   </td>
+                  <td className="bar-cell">
+                    <span className="visually-hidden">
+                      {Math.round((signal.mentions / maxMentions) * 100)}% of the top signal
+                    </span>
+                    <div aria-hidden="true" className="bar-track">
+                      <div
+                        className="bar-fill"
+                        style={{ width: `${Math.max(2, (signal.mentions / maxMentions) * 100)}%` }}
+                      />
+                    </div>
+                  </td>
                   <td className="mentions-cell">{signal.mentions}</td>
-                  <td>
+                  <td className="action-cell">
                     <button
                       aria-label={`Add mention for ${signal.skill}`}
                       className="icon-btn"

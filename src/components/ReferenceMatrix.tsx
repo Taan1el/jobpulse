@@ -7,7 +7,7 @@ type ReferenceMatrixProps = {
 export function ReferenceMatrix({ profiles }: ReferenceMatrixProps) {
   return (
     <section aria-labelledby="reference-heading">
-      <h2 className="section-heading" id="reference-heading">
+      <h2 className="section-title" id="reference-heading">
         Project profiles
       </h2>
       <p className="section-description">
