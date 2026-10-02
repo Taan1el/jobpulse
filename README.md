@@ -6,7 +6,7 @@
 
 SignalDesk is a technical signal planner. It tracks recurring skills and architecture themes, rates how well those themes support reference product profiles, and turns the gaps into a queue of projects to build. Everything runs in the browser and is saved to `localStorage`.
 
-The interface is a dense signal table with the strongest signal first, a compact segmented control for filtering and connection-state switching, and a side column with the selected signal's detail and the build queue.
+The interface reads like a page of field notes. A large ranked leaderboard sits on the left: each signal is a row with a wide inline bar and its mention count in big numerals, and categories are filtered with underline tabs. The right column holds the selected signal and the numbered build order. Headings are set in Bricolage Grotesque, text in DM Sans and figures in Red Hat Mono, on a warm paper background with a single rust accent.
 
 **Live demo:** [taan1el.github.io/jobpulse](https://taan1el.github.io/jobpulse/). The demo runs entirely in your browser: there is no backend, and your data stays on your device.
 
@@ -16,10 +16,10 @@ A short walkthrough of each part of the app is in [docs/demo.md](docs/demo.md).
 
 ## Features
 
-- **Requirement signals**: a dense table, filter by category, search skills and evidence, sort by mentions or name, and add a mention when a skill shows up again.
+- **Requirement signals**: a ranked leaderboard with inline bars, filter by category, search skills and evidence, sort by mentions or name, and add a mention when a skill shows up again.
 - **Selected signal detail**: click a skill to see its full evidence and project angle in the side column.
 - **Reference profiles**: sample product profiles with their technical needs, a fit rating, and a note on what is missing.
-- **Build queue**: tasks move from Next to In progress to Done and can be reopened. The stats strip counts closed tasks.
+- **Build queue**: tasks move from Next to In progress to Done and can be reopened. The summary beside the title counts closed tasks.
 - **Sample batch import**: merges three sample requirements once. Skills that are already tracked get one more mention and keep the text you wrote.
 - **Add signal form**: inline validation for empty fields and for skills that are already tracked.
 - **Connection states**: Ready, Loading, Empty, and Error views for a remote source. These are sample states; the app makes no network requests.

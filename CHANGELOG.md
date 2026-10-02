@@ -8,12 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- Redesigned the interface around the shared product design tokens: Sora, Geist, and Geist Mono replace Inter, the header wordmark drops from a 108px hero to 40px, and every gradient and shadow except the focus ring is gone.
-- Rebuilt the technical signals list as a dense table with the strongest signal first, replacing the repeated card grids. Category filtering and connection-state switching are now compact 44px segmented controls.
-- Added a selected-signal detail panel and moved the build queue into a single side column, next to the signal table.
-- Turned the reference profiles into a dense list instead of a card grid, and combined the import and export panels into one data-actions panel.
-- Added a slim demo bar with the reset action and a link to the source, replacing the separate reset panel.
-- Raised every control to at least 44px tall and confirmed the layout holds to one column with no horizontal page scroll under 720px.
+- Gave the interface its own look, styled as field notes on warm paper with one rust accent. Headings use Bricolage Grotesque, text uses DM Sans, and figures use Red Hat Mono.
+- Replaced the table under a stats strip with a ranked leaderboard. Each signal is a row with a wide inline bar and its mention count in large numerals, and the strongest signal comes first.
+- Category filters and connection-state switching are now underline tabs with a thick accent underline.
+- Moved the selected signal and the numbered build order into the right column, with the sample batch, export and new signal form below them.
+- Replaced the stats strip with a short tally of skills, mentions and closed tasks beside the title, and turned the panels into open sections divided by rules.
+- Rows on narrow screens stack the bar under the skill name, and every control stays at least 44px tall.
 
 ## [1.0.0] - 2026-09-13
 
