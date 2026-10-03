@@ -15,6 +15,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Replaced the stats strip with a short tally of skills, mentions and closed tasks beside the title, and turned the panels into open sections divided by rules.
 - Rows on narrow screens stack the bar under the skill name, and every control stays at least 44px tall.
 
+### Fixed
+
+- The leaderboard table can now be focused and scrolled sideways with the keyboard on narrow screens.
+
+### Added
+
+- A test that checks every scrollable container is a labelled, focusable region.
+
 ## [1.0.0] - 2026-09-13
 
 ### Added

@@ -91,7 +91,9 @@ export function SignalList({
           </p>
         </div>
       ) : (
-        <div className="table-wrapper">
+        // Keyboard users need focus on this wrapper to scroll the table sideways.
+        // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex, jsx-a11y/prefer-tag-over-role
+        <div aria-label="Signal leaderboard table" className="table-wrapper" role="region" tabIndex={0}>
           <table aria-label="Filtered requirement signals" className="signal-table">
             <thead>
               <tr>
